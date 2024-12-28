@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+body{
+  font-family: "Funnel Display", serif;
+}
+
+
+#store{
+  font-family: "Dancing Script", serif;
+
+}
