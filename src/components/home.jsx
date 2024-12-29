@@ -3,6 +3,7 @@ import { useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Invoice from "../Data/InvoiceNumber";
+import InvoiceList from "../Data/Invoices";
 
 const InvoicePage = () => {
   const [itemsList, setItemsList] = useState([]);
@@ -16,7 +17,9 @@ const InvoicePage = () => {
   const [quantity, setQuantity] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [invoiceTotal, setInvoiceTotal] = useState("");
-
+const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({})
+    
+    
   const handleUpdateInvoiceNumber = () => {
     const totalInvoices = Invoice.getLastInvoiceNumber("currentInvoiceNumber");
     const number = totalInvoices + 1;
@@ -86,12 +89,17 @@ const InvoicePage = () => {
 const downloadInvoiceAsPDF = async () => {
     const element = invoiceRef.current; 
     
-    console.log(element, "element")
+    // console.log(element, "element")
+ const fixedWidth = 1024; 
+ const scale = 2;
+
   const canvas = await html2canvas(element, {
-    scale: 2, // Increases the resolution
-    useCORS: true, // Ensures styles and external images are captured
+    scale: scale,
+    useCORS: true,
+    windowWidth: fixedWidth,
+    width: fixedWidth,
   });
-    console.log(canvas, "canvas")
+    // console.log(canvas, "canvas")
 
   const imgData = canvas.toDataURL("image/png");
   const pdf = new jsPDF("p", "mm", "a4");
@@ -99,16 +107,32 @@ const downloadInvoiceAsPDF = async () => {
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-  pdf.save("invoice.pdf");
+    pdf.save("invoice.pdf");
+    
+    const detailsToSave = {
+        client: clientName,
+        addrress: clientAddress,
+        number: clientNumber,
+        invoiceDate: date,
+        expiryDate: expirationDate,
+        invoiceList: itemsList,
+        total: invoiceTotal,
+        invNumber: invoiceNumber
+    }
+
+    InvoiceList.addInvoice("invoiceList", detailsToSave)
 };
 
+    const formatNumberWithCommas = (num) => {
+      return num.toLocaleString(); 
+    };
     
     
 
   return (
     <div className='flex flex-col gap-4 py-4 bg-background text-text'>
-      <div className='grid grid-cols-2 items-start'>
-        <div className='flex flex-col gap-2 w-fit justify-self-center'>
+      <div className='grid grid-cols-2 items-start mx-3 gap-3'>
+        <div className='flex flex-col gap-2  w-full justify-self-center'>
           <h3 className=' font-extrabold text-text underline'>
             Client Details
           </h3>
@@ -137,7 +161,7 @@ const downloadInvoiceAsPDF = async () => {
             />
           </div>
         </div>
-        <div className='flex flex-col gap-2 w-fit justify-self-center'>
+        <div className='flex flex-col gap-2 w-full justify-self-center'>
           <div className='flex justify-between'>
             <h3 className=' font-extrabold text-text underline'>
               Invoice Item
@@ -176,118 +200,154 @@ const downloadInvoiceAsPDF = async () => {
         </div>
       </div>
 
-      <div
-        ref={invoiceRef}
-        className=' px-3 py-6 m-3  border border-input-border'
-      >
-        <div className='flex flex-col justify-between '>
-          <div className='flex justify-between'>
-            <div className='flex flex-col'>
-              <h1
-                id='store'
-                className='font-extrabold mb-1 text-text-accent text-3xl'
-              >
-                GlamByRee
-              </h1>
-              <p>Millenium Estate, Gbagada</p>
-              <p>Lagos, Nigeria</p>
-              <p>Instagram : @Glambyree</p>
-              <p>Mobile : 08106491158</p>
-              <p>Email : Nureeyah1503@icloud.com</p>
+      <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit '>
+        <div className='border mx-auto w-full border-input-border px-3 py-6'>
+          <div className='flex flex-col justify-between '>
+            <div className='flex justify-between'>
+              <div className='flex flex-col'>
+                <h1
+                  id='store'
+                  className='font-extrabold mb-6 text-text-accent text-5xl'
+                >
+                  GlamByRee
+                </h1>
+                <p>Millenium Estate, Gbagada</p>
+                <p>Lagos, Nigeria</p>
+                <p>Instagram : @Glambyree</p>
+                <p>Mobile : 08106491158</p>
+                <p>Email : Nureeyah1503@icloud.com</p>
+              </div>
+              <div className='flex flex-col items-start mt-4'>
+                <h2 className='font-extrabold text-xl'>
+                  Invoice # {invoiceNumber}
+                </h2>
+                <p>Date : {date}</p>
+                <p>Valid till : {expirationDate}</p>
+              </div>
             </div>
-            <div className='flex flex-col items-start'>
-              <h2 className='font-extrabold text-xl'>
-                Invoice # {invoiceNumber}
-              </h2>
-              <p>Date : {date}</p>
-              <p>Valid till : {expirationDate}</p>
+
+            <div className='grid grid-cols-2 my-4'>
+              <div className='border-2 w-fit font-semibold  border-input-border px-4 py-2'>
+                <h1 className='font-semibold underline'>Payment Details</h1>
+                <div className='flex gap-1 font-semibold'>
+                  <p className='font-normal'>Bank : </p>Kuda MFB
+                </div>
+                <div className='flex gap-1'>
+                  <p className='font-normal'>Account Number : </p>2016366060
+                </div>
+                <div className='flex gap-1'>
+                  <p className='font-normal'>Account Name :</p>Nureeyah
+                  Ogunmuyiwa
+                </div>
+              </div>
+              <div className='border-2 w-fit max-w-[70%] justify-self-end border-input-border px-4 py-2'>
+                <h1 className='font-semibold underline'>Bill To</h1>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Name :</p> */}
+                  {clientName}
+                </div>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Number :</p> */}
+                  {clientNumber}
+                </div>
+                <div className='flex gap-1 text-wrap break-words w-full'>
+                  {/* <p className='font-semibold'>Address :</p> */}
+                  <p className=' w-full'>{clientAddress}</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className='grid grid-cols-2 my-2'>
-            <div className='border-2 w-fit border-input-border px-4 py-2'>
-              <h1 className='font-semibold underline'>Payment Details</h1>
-              <div className='flex gap-1'>
-                <p className='font-semibold'>Bank : </p>Kuda MFB
-              </div>
-              <div className='flex gap-1'>
-                <p className='font-semibold'>Account Number : </p>2016366060
-              </div>
-              <div className='flex gap-1'>
-                <p className='font-semibold'>Account Name</p>Nureeyah Ogunmuyiwa
-              </div>
-            </div>
-            <div className='border-2 w-fit max-w-[70%] justify-self-end border-input-border px-4 py-2'>
-              <h1 className='font-semibold underline'>Bill To</h1>
-              <div className='flex gap-1'>
-                {/* <p className='font-semibold'>Name :</p> */}
-                {clientName}
-              </div>
-              <div className='flex gap-1'>
-                {/* <p className='font-semibold'>Number :</p> */}
-                {clientNumber}
-              </div>
-              <div className='flex gap-1 text-wrap break-words w-full'>
-                {/* <p className='font-semibold'>Address :</p> */}
-                <p className=' w-full'>{clientAddress}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <table className=' w-full'>
-          <thead className='bg-table-header font-semibold '>
-            <tr>
-              <td className='w-1/2'>ITEM</td> {/* Widest column */}
-              <td className='w-1/12'>QTY</td>
-              <td className='w-1/6'>UNIT PRICE</td>
-              <td className='w-1/6'>AMOUNT</td>
-            </tr>
-          </thead>
-
-          <tbody>
-            {itemsList.map((item, index) => (
-              <tr key={index}>
-                <td className='w-1/2'>{item.item}</td>
-                <td className='w-1/12'>{item.quantity}</td>
-                <td className='w-1/6'>{item.price}</td>
-                <td className='w-1/6'>{item.amount}</td>
+          <table className=' w-full'>
+            <thead className='bg-table-header  font-semibold '>
+              <tr className=' '>
+                <td className='w-1/2 py-2 pl-2'>ITEM</td> {/* Widest column */}
+                <td className='w-1/12 py-2 text-right'>QTY</td>
+                <td className='w-1/6 py-2 pl-2 text-right'>UNIT PRICE </td>
+                <td className='w-1/6 py-2 text-right pr-2'>AMOUNT </td>
               </tr>
-            ))}
+            </thead>
 
-            <tr>
-              <td colSpan={3}>Total:</td>
-              <td> {invoiceTotal}</td>
-            </tr>
-          </tbody>
-        </table>
+            <tbody>
+              {itemsList.map((item, index) => (
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-table-row" : "bg-background"}
+                >
+                  <td className='w-1/2 py-2 pl-2'>{item.item}</td>
+                  <td className='w-1/12 py-2 text-right'>{item.quantity}</td>
+                  <td className='w-1/12 py-2 pl-2 text-right'>
+                    ₦ {formatNumberWithCommas(item.price)}
+                  </td>
+                  <td className='w-1/4 py-2 font-semibold text-right pr-2'>
+                    ₦ {formatNumberWithCommas(item.amount)}.00
+                  </td>
+                </tr>
+              ))}
 
-        <div>
-          <h3> ‼PLEASE READ BEFORE PAYMENT‼</h3>
-          <p>
-            Punctuality Clause To ensure a smooth and enjoyable experience, it’s
-            important that we begin your makeup session at the agreed-upon time.
-            Starting promptly allows us to give you the full attention and
-            quality you deserve. In the Event of Lateness,
-          </p>
-          • There is a 10 minute wait-period provided the artist is informed at
-          least 30 minutes before the appoitment. • If you arrive 30 minutes to
-          1 hour late, please note that an additional fee of ₦10,000 per hour
-          will apply to accommodate the schedule adjustments required. • If you
-          are delayed by more than 2 hours, the deposit will be forfeited, and
-          the session may need to be rescheduled or canceled. I kindly encourage
-          you to plan to arrive a few minutes early, so we can make the most of
-          our time together and ensure everything runs smoothly. By proceeding
-          with payment, the client agrees to all terms outlined above. Kindly
-          share payment receipt once completed.
+              <tr>
+                <td></td>
+                <td></td>
+                <td className='bg-table-header font-bold py-2 pl-2  text-right '>
+                  Total
+                </td>
+                <td className='bg-table-header font-bold py-2 text-right pr-2 '>
+                  ₦ {formatNumberWithCommas(invoiceTotal)}.00
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className='text-xs mt-3'>
+            <h2 className='font-extrabold text-xl'>
+              ‼PLEASE READ BEFORE PAYMENT‼
+            </h2>
+            <ul>
+              <li>
+                <h3 className='underline font-bold'>Punctuality Clause</h3>
+                <p>
+                  To ensure a smooth and enjoyable experience, it’s important
+                  that we begin your makeup session at the agreed-upon time.
+                  Starting promptly allows us to give you the full attention and
+                  quality you deserve.
+                </p>
+              </li>
+              <li>
+                <h3 className='underline font-bold'>
+                  In the Event of Lateness;
+                </h3>
+                <ul className='list-disc pl-4'>
+                  <li>
+                    There is a 10 minute wait-period provided the artist is
+                    informed at least 30 minutes before the appoitment. I kindly
+                    encourage you to plan to arrive a few minutes early, so we
+                    can make the most of our time together and ensure everything
+                    runs smoothly. By proceeding with payment, the client agrees
+                    to all terms outlined above. Kindly share payment
+                    receipt once completed.
+                  </li>
+                  <li>
+                    If you arrive 30 minutes to 1 hour late, please note that an
+                    additional fee of ₦10,000 per hour will apply to accommodate
+                    the schedule adjustments required.
+                  </li>
+                  <li>
+                    If you are delayed by more than 2 hours, the deposit will be
+                    forfeited, and the session may need to be rescheduled or
+                    canceled.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <button
         onClick={downloadInvoiceAsPDF}
-        className='bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-700'
+        className='bg-button hover:bg-button-hover w-fit mx-auto px-4 font-bold rounded-lg py-2 '
       >
-        Download as PDF
+        Save and Download
       </button>
     </div>
   );
