@@ -10,22 +10,21 @@ const InvoicePage = () => {
   const [clientName, setClientName] = useState("");
   const [clientNumber, setClientNumber] = useState("");
   const [clientAddress, setClientAddress] = useState("");
-  const [invoiceNumber, setInvioiceNumber] = useState(2);
+  const [invoiceNumber, setInvioiceNumber] = useState(null);
   const [date, setDate] = useState("2/03/2024");
   const [expirationDate, setExpirationDate] = useState("4/03/2039");
   const [itemToAdd, setItemToAdd] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [invoiceTotal, setInvoiceTotal] = useState("");
-const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({})
-    
-    
+  const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({});
+
   const handleUpdateInvoiceNumber = () => {
     const totalInvoices = Invoice.getLastInvoiceNumber("currentInvoiceNumber");
     const number = totalInvoices + 1;
     // console.log(number, "numbehjyyyr")
     setInvioiceNumber(number);
-    Invoice.setLastInvoiceNumber("currentInvoiceNumber", number);
+    // Invoice.setLastInvoiceNumber("currentInvoiceNumber", number);
   };
 
   useEffect(() => {
@@ -83,51 +82,57 @@ const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({})
     );
     setInvoiceTotal(currentTotal); // Update total in state
   }, [itemsList]);
-    
-    const invoiceRef = useRef();
 
-const downloadInvoiceAsPDF = async () => {
-    const element = invoiceRef.current; 
-    
+  const invoiceRef = useRef();
+
+  const downloadInvoiceAsPDF = async () => {
+    const element = invoiceRef.current;
+
     // console.log(element, "element")
- const fixedWidth = 1024; 
- const scale = 2;
+    const fixedWidth = 1024;
+    const scale = 2;
 
-  const canvas = await html2canvas(element, {
-    scale: scale,
-    useCORS: true,
-    windowWidth: fixedWidth,
-    width: fixedWidth,
-  });
+    const canvas = await html2canvas(element, {
+      scale: scale,
+      useCORS: true,
+      windowWidth: fixedWidth,
+      width: fixedWidth,
+    });
     // console.log(canvas, "canvas")
 
-  const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("invoice.pdf");
-    
+
     const detailsToSave = {
-        client: clientName,
-        addrress: clientAddress,
-        number: clientNumber,
-        invoiceDate: date,
-        expiryDate: expirationDate,
-        invoiceList: itemsList,
-        total: invoiceTotal,
-        invNumber: invoiceNumber
-    }
-
-    InvoiceList.addInvoice("invoiceList", detailsToSave)
-};
-
-    const formatNumberWithCommas = (num) => {
-      return num.toLocaleString(); 
+      client: clientName,
+      addrress: clientAddress,
+      number: clientNumber,
+      invoiceDate: date,
+      expiryDate: expirationDate,
+      invoiceList: itemsList,
+      total: invoiceTotal,
+      invNumber: invoiceNumber,
     };
-    
-    
+
+    InvoiceList.addInvoice("invoiceList", detailsToSave);
+
+    handleUpdateInvoiceNumber();
+    Invoice.setLastInvoiceNumber(
+      "currentInvoiceNumber",
+      Invoice.getLastInvoiceNumber("currentInvoiceNumber") + 1
+    );
+
+    setInvioiceNumber(invoiceNumber + 1);
+  };
+
+  const formatNumberWithCommas = (num) => {
+    return num.toLocaleString();
+  };
 
   return (
     <div className='flex flex-col gap-4 py-4 bg-background text-text'>
@@ -168,7 +173,7 @@ const downloadInvoiceAsPDF = async () => {
             </h3>
             <button
               onClick={handleAddNewItem}
-              className='bg-button  px-1 rounded-full hover:bg-button-hover'
+              className='border-2 border-button  text-button hover:text-button-hover px-1 rounded-lg hover:border-button-hover'
             >
               <i className='fa-solid fa-plus'></i>{" "}
             </button>
@@ -201,7 +206,7 @@ const downloadInvoiceAsPDF = async () => {
       </div>
 
       <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit '>
-        <div className='border mx-auto w-full border-input-border px-3 py-6'>
+        <div className='border mx-auto w-full border-input-border px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
               <div className='flex flex-col'>
@@ -213,20 +218,20 @@ const downloadInvoiceAsPDF = async () => {
                 </h1>
                 <p>Millenium Estate, Gbagada</p>
                 <p>Lagos, Nigeria</p>
-                <p>Instagram : @Glambyree</p>
+                {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
-                <p>Email : Nureeyah1503@icloud.com</p>
+                <p>Email : Nureeyah1503@icloud.com</p> */}
               </div>
               <div className='flex flex-col items-start mt-4'>
                 <h2 className='font-extrabold text-xl'>
                   Invoice # {invoiceNumber}
                 </h2>
                 <p>Date : {date}</p>
-                <p>Valid till : {expirationDate}</p>
+                {/* <p>Valid till : {expirationDate}</p> */}
               </div>
             </div>
 
-            <div className='grid grid-cols-2 my-4'>
+            <div className='grid grid-cols-2 mt-8 mb-4'>
               <div className='border-2 w-fit font-semibold  border-input-border px-4 py-2'>
                 <h1 className='font-semibold underline'>Payment Details</h1>
                 <div className='flex gap-1 font-semibold'>
@@ -298,47 +303,64 @@ const downloadInvoiceAsPDF = async () => {
             </tbody>
           </table>
 
-          <div className='text-xs mt-3'>
-            <h2 className='font-extrabold text-xl'>
-              ‼PLEASE READ BEFORE PAYMENT‼
-            </h2>
-            <ul>
-              <li>
-                <h3 className='underline font-bold'>Punctuality Clause</h3>
-                <p>
-                  To ensure a smooth and enjoyable experience, it’s important
-                  that we begin your makeup session at the agreed-upon time.
-                  Starting promptly allows us to give you the full attention and
-                  quality you deserve.
+          <div className='flex flex-col w-full'>
+            <div className='text-xs mt-3 '>
+              <h2 className='font-extrabold text-xl'>
+                ‼PLEASE READ BEFORE PAYMENT‼
+              </h2>
+              <ul>
+                <li>
+                  <h3 className='underline font-bold'>Punctuality Clause</h3>
+                  <p>
+                    To ensure a smooth and enjoyable experience, it’s important
+                    that we begin your makeup session at the agreed-upon time.
+                    Starting promptly allows us to give you the full attention
+                    and quality you deserve.
+                  </p>
+                </li>
+                <li>
+                  <h3 className='underline font-bold'>
+                    In the Event of Lateness;
+                  </h3>
+                  <ul className='list-disc pl-4'>
+                    <li>
+                      There is a 10 minute wait-period provided the artist is
+                      informed at least 30 minutes before the appoitment. I
+                      kindly encourage you to plan to arrive a few minutes
+                      early, so we can make the most of our time together and
+                      ensure everything runs smoothly. By proceeding with
+                      payment, the client agrees to all terms outlined above.
+                      Kindly share payment receipt once completed.
+                    </li>
+                    <li>
+                      If you arrive 30 minutes to 1 hour late, please note that
+                      an additional fee of ₦10,000 per hour will apply to
+                      accommodate the schedule adjustments required.
+                    </li>
+                    <li>
+                      If you are delayed by more than 2 hours, the deposit will
+                      be forfeited, and the session may need to be rescheduled
+                      or canceled.
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h3 className='text-xs mt-6 underline font-bold'>For inquiries;</h3>
+              <div className='flex w-full text-[10px] self-end gap-2 items-center'>
+                <p className=' w-fit flex gap-1 items-center'>
+                  <i className='fa-brands fa-instagram'></i>@Glambyree
                 </p>
-              </li>
-              <li>
-                <h3 className='underline font-bold'>
-                  In the Event of Lateness;
-                </h3>
-                <ul className='list-disc pl-4'>
-                  <li>
-                    There is a 10 minute wait-period provided the artist is
-                    informed at least 30 minutes before the appoitment. I kindly
-                    encourage you to plan to arrive a few minutes early, so we
-                    can make the most of our time together and ensure everything
-                    runs smoothly. By proceeding with payment, the client agrees
-                    to all terms outlined above. Kindly share payment
-                    receipt once completed.
-                  </li>
-                  <li>
-                    If you arrive 30 minutes to 1 hour late, please note that an
-                    additional fee of ₦10,000 per hour will apply to accommodate
-                    the schedule adjustments required.
-                  </li>
-                  <li>
-                    If you are delayed by more than 2 hours, the deposit will be
-                    forfeited, and the session may need to be rescheduled or
-                    canceled.
-                  </li>
-                </ul>
-              </li>
-            </ul>
+                <p className=' w-fit flex gap-1 items-center'>
+                  <i className='fa-solid fa-phone'></i>08106491158
+                </p>
+                <p className=' w-fit flex gap-1 items-center'>
+                  <i className='fa-solid fa-envelope'></i>
+                  Nureeyah1503@icloud.com
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

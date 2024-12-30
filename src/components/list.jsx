@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import InvoiceList from "../Data/Invoices";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 // import { list } from "postcss";
 
 const HomePage = () => {
@@ -13,24 +13,7 @@ const HomePage = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [invNumber, setInvNumber] = useState(null);
 
-  //   const handleSearchKeyword = () => {
-  //     // const filterdInvoices = paginatedList.client
-
-  //     const filteredClients = invoiceList.filter((todo) => {
-  //       const matchesClient = invoiceList.title
-  //         .toLowerCase()
-  //         .includes(searchQuery.toLowerCase());
-
-  //       const matchesInvoiceNumber = invoiceList.invnumber.includes(invNumber);
-
-  //       return filteredClients && matchesInvoiceNumber;
-  //     });
-  //   };
-
-  // useEffect(() => {
-  //     handleSearchKeyword();
-
-  // }, [searchQuery, currentPage])
+    
 
   const handlePagination = () => {
     const filteredClients = invoiceList.filter((invoice) => {
@@ -57,10 +40,20 @@ const HomePage = () => {
   };
 
   const handlePreviousButtton = () => {
-    if (currentPage ) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+    if (currentPage <= 1) {
+      setCurrentPage(1);
+      }
+    else {
+        setCurrentPage(currentPage -1)
+      }
+    };
+      const handleNextButton = () => {
+        if (currentPage >= totalPages) {
+          setCurrentPage(totalPages);
+        } else {
+          setCurrentPage(currentPage + 1);
+        }
+      };
 
   useEffect(() => {
     setCurrentPage(1);
@@ -88,34 +81,69 @@ const HomePage = () => {
   };
 
   return (
-    <div>
-      <h1>hjwiw</h1>
-      <input
-        type='text'
-        placeholder='Search...'
-        onChange={(e) => setSearchKeyword(e.target.value)}
-      ></input>
-      <input
-        type='text'
-        placeholder='inv no...'
-        onChange={(e) => setInvNumber(e.target.value)}
-      ></input>
-      <button onClick={handleNavigateToCreateInvoice}>New Invoice</button>
-      <ul>
+    <div className='flex flex-col gap-3 px-3'>
+      <div className='flex justify-between gap-3'>
+        <button
+          onClick={handleNavigateToCreateInvoice}
+          className='border-2 border-button text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+        >
+          <i className='fa-solid fa-plus'></i>{" "}
+        </button>
+
+        <div className='flex justify-between gap-3 w-full'>
+          <input
+            type='text'
+            className='border-2 placeholder:text-text border-button  px-2 py-1 rounded w-full'
+            placeholder='Client name...'
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          ></input>
+          <input
+            className='border-2 placeholder:text-text border-button px-2 py-1 rounded'
+            type='text'
+            placeholder='Inv number...'
+            onChange={(e) => setInvNumber(e.target.value)}
+          ></input>
+        </div>
+      </div>
+      <ul className='flex flex-col gap-2'>
         {paginatedList.map((item, index) => (
-          <li key={index} className='bg-table-row'>
+          <li key={index} className='bg-table-row border-2 border-table-border'>
             <p className='w-1/2 py-2 pl-2'>{item.client}</p>
-            <p> {item.number}</p>
-            <p>{formatNumberWithCommas(item.total)}</p>
-            <p>{item.invoiceDate}</p>
+            <p className='bg-red-300 p-2'> {item.invNumber}</p>
+            {/* <p>{formatNumberWithCommas(item.total)}</p> */}
+            {/* <p>{item.invoiceDate}</p> */}
+            <ul className='pl-4'>
+              {item.invoiceList.map((invoiceItem, invoiceIndex) => (
+                <li
+                  key={invoiceIndex}
+                  className='flex justify-between border-b py-1'
+                >
+                      <span>{invoiceItem.item}</span>
+                      
+                </li>
+              ))}
+            </ul>
+            <NavLink to={`/${item.invNumber}`} className=' text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'>
+              <i className='fa-solid fa-arrow-up-right-from-square'></i>
+            </NavLink>
             {/* <p>{item.invoiceList.} </p> */}
           </li>
         ))}
       </ul>
-      <div>
-        <button onClick={() => setCurrentPage(currentPage - 1)}>prev</button>
+      <div className='flex gap-4 items-center w-fit mx-auto py-3'>
+        <button
+          className='border-2 border-button text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+          onClick={handlePreviousButtton}
+        >
+          <i className='fa-solid fa-arrow-left'></i>
+        </button>
         <p>{currentPage}</p>
-        <button onClick={() => setCurrentPage(currentPage + 1)}>next</button>
+        <button
+          className='border-2 border-button text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+          onClick={handleNextButton}
+        >
+          <i className='fa-solid fa-arrow-right'></i>
+        </button>
       </div>
     </div>
   );

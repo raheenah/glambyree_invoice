@@ -29,7 +29,7 @@ const NavBar = () => {
                 : "text-button-bg"
             }`}
           >
-            Not Found{" "}
+            Create
           </NavLink>
         </li>
       </ul>
