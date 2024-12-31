@@ -10,12 +10,12 @@ const NavBar = () => {
       <ul className='flex py-2 gap-2  text-center lg:max-w-[80%] w-full mx-auto  items-center justify-center  shadow-custom-todo rounded-lg px-2'>
         <li>
           <NavLink
-            to='/'
+            to='/list'
             className={`text-text hover:text-button-hover hover:underline hover:font-bold font-semibold ${
               isActive("/") ? "text-button-hover underline" : "text-text"
             }`}
           >
-            Home
+            Inv List
           </NavLink>
         </li>
 

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import InvoicePage from "./components/home";
 import HomePage from "./components/list";
@@ -14,7 +14,8 @@ function App() {
         <NavBar />
         <div className="pt-16 text-text bg-background">
           <Routes>
-            <Route path='/' element={<HomePage />} />
+            <Route path="/" element={<Navigate to= "/add"/>}/>
+            <Route path='/list' element={<HomePage />} />
             <Route path='/add' element={<InvoicePage />} />
             <Route path="/:invNum" element={<SavedInvoiceDetails/>}/>
           </Routes>

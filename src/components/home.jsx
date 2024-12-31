@@ -266,10 +266,10 @@ const InvoicePage = () => {
           <table className=' w-full'>
             <thead className='bg-table-header  font-semibold '>
               <tr className=' '>
-                <td className='w-1/2 py-2 pl-2'>ITEM</td> {/* Widest column */}
-                <td className='w-1/12 py-2 text-right'>QTY</td>
-                <td className='w-1/6 py-2 pl-2 text-right'>UNIT PRICE </td>
-                <td className='w-1/6 py-2 text-right pr-2'>AMOUNT </td>
+                <td className='w-1/2 py-2 pl-2'>ITEM</td>
+                <td className='max-w-1/12 py-2 text-right'>QTY</td>
+                <td className='max-w-1/6 py-2 pl-2 text-right'>UNIT PRICE </td>
+                <td className='max-w-1/6 py-2 text-right pr-2'>AMOUNT </td>
               </tr>
             </thead>
 
@@ -280,11 +280,13 @@ const InvoicePage = () => {
                   className={index % 2 === 0 ? "bg-table-row" : "bg-background"}
                 >
                   <td className='w-1/2 py-2 pl-2'>{item.item}</td>
-                  <td className='w-1/12 py-2 text-right'>{item.quantity}</td>
-                  <td className='w-1/12 py-2 pl-2 text-right'>
+                  <td className='max-w-1/12 py-2 text-right'>
+                    {item.quantity}
+                  </td>
+                  <td className='max-w-1/12 py-2 pl-2 text-right'>
                     ₦ {formatNumberWithCommas(item.price)}
                   </td>
-                  <td className='w-1/4 py-2 font-semibold text-right pr-2'>
+                  <td className='max-w-1/4 py-2 font-semibold text-right pr-2'>
                     ₦ {formatNumberWithCommas(item.amount)}.00
                   </td>
                 </tr>
@@ -346,8 +348,10 @@ const InvoicePage = () => {
                 </li>
               </ul>
             </div>
-            <div className="flex flex-col gap-1">
-              <h3 className='text-xs mt-6 underline font-bold'>For inquiries;</h3>
+            <div className='flex flex-col gap-1'>
+              <h3 className='text-xs mt-6 underline font-bold'>
+                For inquiries;
+              </h3>
               <div className='flex w-full text-[10px] self-end gap-2 items-center'>
                 <p className=' w-fit flex gap-1 items-center'>
                   <i className='fa-brands fa-instagram'></i>@Glambyree

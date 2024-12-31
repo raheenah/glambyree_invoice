@@ -81,7 +81,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className='flex flex-col gap-3 px-3'>
+    <div className='flex flex-col gap-3 px-3 min-h-screen'>
       <div className='flex justify-between gap-3'>
         <button
           onClick={handleNavigateToCreateInvoice}
@@ -93,37 +93,44 @@ const HomePage = () => {
         <div className='flex justify-between gap-3 w-full'>
           <input
             type='text'
-            className='border-2 placeholder:text-text border-button  px-2 py-1 rounded w-full'
+            className='border-2 placeholder:text-text  border-button bg-transparent  px-2 py-1 rounded w-full'
             placeholder='Client name...'
             onChange={(e) => setSearchKeyword(e.target.value)}
           ></input>
           <input
-            className='border-2 placeholder:text-text border-button px-2 py-1 rounded'
+            className='border-2 placeholder:text-text border-button px-2 bg-transparent py-1 rounded'
             type='text'
             placeholder='Inv number...'
             onChange={(e) => setInvNumber(e.target.value)}
           ></input>
         </div>
       </div>
-      <ul className='flex flex-col gap-2'>
+      <ul className='flex flex-col  gap-2'>
         {paginatedList.map((item, index) => (
-          <li key={index} className='bg-table-row border-2 border-table-border'>
-            <p className='w-1/2 py-2 pl-2'>{item.client}</p>
-            <p className='bg-red-300 p-2'> {item.invNumber}</p>
+          <li
+            key={index}
+            className='bg-table-row flex flex-col items-center border-2 py-1 w-[70%] mx-auto rounded-lg border-table-border'
+          >
+            <div className="flex font-bold items-center w-full px-3 justify-between">
+              <p className='w-full py-2  pl-2'>{item.client}</p>
+              <p className='font-bold p-2'> {item.invNumber}</p>
+            </div>
             {/* <p>{formatNumberWithCommas(item.total)}</p> */}
             {/* <p>{item.invoiceDate}</p> */}
-            <ul className='pl-4'>
+            <ul className='pl-4 max-h-32 overflow-y-auto'>
               {item.invoiceList.map((invoiceItem, invoiceIndex) => (
                 <li
                   key={invoiceIndex}
                   className='flex justify-between border-b py-1'
                 >
-                      <span>{invoiceItem.item}</span>
-                      
+                  <span>{invoiceItem.item}</span>
                 </li>
               ))}
             </ul>
-            <NavLink to={`/${item.invNumber}`} className=' text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'>
+            <NavLink
+              to={`/${item.invNumber}`}
+              className=' text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+            >
               <i className='fa-solid fa-arrow-up-right-from-square'></i>
             </NavLink>
             {/* <p>{item.invoiceList.} </p> */}
