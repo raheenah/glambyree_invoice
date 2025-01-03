@@ -206,7 +206,7 @@ const InvoicePage = () => {
       </div>
 
       <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit '>
-        <div className='border mx-auto w-full border-input-border px-3 pt-6 pb-3'>
+        <div className='border mx-auto  flex flex-col w-full border-input-border px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
               <div className='flex flex-col'>
@@ -231,34 +231,19 @@ const InvoicePage = () => {
               </div>
             </div>
 
-            <div className='grid grid-cols-2 mt-8 mb-4'>
-              <div className='border-2 w-fit font-semibold  border-input-border px-4 py-2'>
-                <h1 className='font-semibold underline'>Payment Details</h1>
-                <div className='flex gap-1 font-semibold'>
-                  <p className='font-normal'>Bank : </p>Kuda MFB
-                </div>
-                <div className='flex gap-1'>
-                  <p className='font-normal'>Account Number : </p>2016366060
-                </div>
-                <div className='flex gap-1'>
-                  <p className='font-normal'>Account Name :</p>Nureeyah
-                  Ogunmuyiwa
-                </div>
+            <div className='border-2 w-fit mb-5 mt-48 max-w-[50%] self-end border-input-border px-4 py-2'>
+              <h1 className='font-semibold underline'>Bill To</h1>
+              <div className='flex gap-1'>
+                {/* <p className='font-semibold'>Name :</p> */}
+                {clientName}
               </div>
-              <div className='border-2 w-fit max-w-[70%] justify-self-end border-input-border px-4 py-2'>
-                <h1 className='font-semibold underline'>Bill To</h1>
-                <div className='flex gap-1'>
-                  {/* <p className='font-semibold'>Name :</p> */}
-                  {clientName}
-                </div>
-                <div className='flex gap-1'>
-                  {/* <p className='font-semibold'>Number :</p> */}
-                  {clientNumber}
-                </div>
-                <div className='flex gap-1 text-wrap break-words w-full'>
-                  {/* <p className='font-semibold'>Address :</p> */}
-                  <p className=' w-full'>{clientAddress}</p>
-                </div>
+              <div className='flex gap-1'>
+                {/* <p className='font-semibold'>Number :</p> */}
+                {clientNumber}
+              </div>
+              <div className='flex gap-1 text-wrap break-words w-full'>
+                {/* <p className='font-semibold'>Address :</p> */}
+                <p className=' w-full'>{clientAddress}</p>
               </div>
             </div>
           </div>
@@ -266,7 +251,7 @@ const InvoicePage = () => {
           <table className=' w-full'>
             <thead className='bg-table-header  font-semibold '>
               <tr className=' '>
-                <td className='w-1/2 py-2 pl-2'>ITEM</td>
+                <td className='w-1/2 py-2 pl-2'>SERVICE</td>
                 <td className='max-w-1/12 py-2 text-right'>QTY</td>
                 <td className='max-w-1/6 py-2 pl-2 text-right'>UNIT PRICE </td>
                 <td className='max-w-1/6 py-2 text-right pr-2'>AMOUNT </td>
@@ -304,11 +289,23 @@ const InvoicePage = () => {
               </tr>
             </tbody>
           </table>
+          <div className='border-2  my-5 w-fit max-w-[50%] self-end font-semibold  border-input-border px-4 py-2'>
+            <h1 className='font-semibold underline'>Payment Details</h1>
+            <div className='flex gap-1 items-center font-semibold'>
+              <p className='font-normal '>Bank : </p>Kuda MFB
+            </div>
+            <div className='flex gap-1 items-center'>
+              <p className='font-normal'>Account Number : </p>2016366060
+            </div>
+            <div className='flex gap-1 items-center'>
+              <p className='font-normal'>Account Name :</p>Nureeyah Ogunmuyiwa
+            </div>
+          </div>
 
           <div className='flex flex-col w-full'>
-            <div className='text-xs mt-3 '>
+            <div className='text-xs '>
               <h2 className='font-extrabold text-xl'>
-                ‼PLEASE READ BEFORE PAYMENT‼
+                PLEASE READ BEFORE PAYMENT
               </h2>
               <ul>
                 <li>
@@ -345,6 +342,10 @@ const InvoicePage = () => {
                       or canceled.
                     </li>
                   </ul>
+                  <p>
+                    By proceeding with payment, the client agrees to all terms
+                    outlined above. Kindly share payment receipt once completed.
+                  </p>
                 </li>
               </ul>
             </div>

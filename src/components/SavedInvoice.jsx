@@ -68,7 +68,7 @@ useEffect(() => {
 
         // console.log(element, "element")
         const fixedWidth = 1024;
-        const scale = 2;
+        const scale = 1;
 
         const canvas = await html2canvas(element, {
           scale: scale,
@@ -100,8 +100,8 @@ useEffect(() => {
       <div className='flex flex-col min-h-screen'>
         {/* {invDetails ? <p>{invDetails.client}</p> : <p>Loading...</p>} */}
         {invDetails && invItems.length > 0 && (
-          <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit '>
-            <div className='border mx-auto w-full border-input-border px-3 pt-6 pb-3'>
+          <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit  flex '>
+            <div className='border mx-auto  flex flex-col w-full border-input-border px-3 pt-6 pb-3'>
               <div className='flex flex-col justify-between '>
                 <div className='flex justify-between'>
                   <div className='flex flex-col'>
@@ -126,34 +126,19 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <div className='grid grid-cols-2 mt-8 mb-4'>
-                  <div className='border-2 w-fit font-semibold  border-input-border px-4 py-2'>
-                    <h1 className='font-semibold underline'>Payment Details</h1>
-                    <div className='flex gap-1 font-semibold'>
-                      <p className='font-normal'>Bank : </p>Kuda MFB
-                    </div>
-                    <div className='flex gap-1'>
-                      <p className='font-normal'>Account Number : </p>2016366060
-                    </div>
-                    <div className='flex gap-1'>
-                      <p className='font-normal'>Account Name :</p>Nureeyah
-                      Ogunmuyiwa
-                    </div>
+                <div className='border-2 w-fit mb-5 mt-48 max-w-[50%] self-end border-input-border px-4 py-2'>
+                  <h1 className='font-semibold underline'>Bill To</h1>
+                  <div className='flex gap-1'>
+                    {/* <p className='font-semibold'>Name :</p> */}
+                    {invDetails.client}
                   </div>
-                  <div className='border-2 w-fit max-w-[70%] justify-self-end border-input-border px-4 py-2'>
-                    <h1 className='font-semibold underline'>Bill To</h1>
-                    <div className='flex gap-1'>
-                      {/* <p className='font-semibold'>Name :</p> */}
-                      {invDetails.client}
-                    </div>
-                    <div className='flex gap-1'>
-                      {/* <p className='font-semibold'>Number :</p> */}
-                      {invDetails.number}
-                    </div>
-                    <div className='flex gap-1 text-wrap break-words w-full'>
-                      {/* <p className='font-semibold'>Address :</p> */}
-                      <p className=' w-full'>{invDetails.address}</p>
-                    </div>
+                  <div className='flex gap-1'>
+                    {/* <p className='font-semibold'>Number :</p> */}
+                    {invDetails.number}
+                  </div>
+                  <div className='flex gap-1 text-wrap break-words w-full'>
+                    {/* <p className='font-semibold'>Address :</p> */}
+                    <p className=' w-full'>{invDetails.address}</p>
                   </div>
                 </div>
               </div>
@@ -161,7 +146,7 @@ useEffect(() => {
               <table className=' w-full'>
                 <thead className='bg-table-header font-semibold'>
                   <tr>
-                    <td className='max-w-1/2 py-2 pl-2'>ITEM</td>
+                    <td className='max-w-1/2 py-2 pl-2'>SERVICE</td>
                     <td className='max-w-1/6 py-2 text-right'>QTY</td>
                     <td className='max-w-1/6 py-2 pl-2 text-right'>
                       UNIT PRICE
@@ -204,10 +189,24 @@ useEffect(() => {
                 </tbody>
               </table>
 
+              <div className='border-2 my-5  w-fit max-w-[50%] self-end font-semibold  border-input-border px-4 py-2'>
+                <h1 className='font-semibold underline'>Payment Details</h1>
+                <div className='flex gap-1 items-center font-semibold'>
+                  <p className='font-normal'>Bank : </p>Kuda MFB
+                </div>
+                <div className='flex gap-1 items-center'>
+                  <p className='font-normal'>Account Number : </p>2016366060
+                </div>
+                <div className='flex gap-1'>
+                  <p className='font-normal items-center'>Account Name :</p>
+                  Nureeyah Ogunmuyiwa
+                </div>
+              </div>
+
               <div className='flex flex-col w-full'>
                 <div className='text-xs mt-3 '>
-                  <h2 className='font-extrabold text-xl'>
-                    ‼PLEASE READ BEFORE PAYMENT‼
+                  <h2 className='font-extrabold   text-xl'>
+                    PLEASE READ BEFORE PAYMENT❗
                   </h2>
                   <ul>
                     <li>
@@ -231,9 +230,7 @@ useEffect(() => {
                           is informed at least 30 minutes before the appoitment.
                           I kindly encourage you to plan to arrive a few minutes
                           early, so we can make the most of our time together
-                          and ensure everything runs smoothly. By proceeding
-                          with payment, the client agrees to all terms outlined
-                          above. Kindly share payment receipt once completed.
+                          and ensure everything runs smoothly.
                         </li>
                         <li>
                           If you arrive 30 minutes to 1 hour late, please note
@@ -248,6 +245,8 @@ useEffect(() => {
                       </ul>
                     </li>
                   </ul>
+                  By proceeding with payment, the client agrees to all terms
+                  outlined above. Kindly share payment receipt once completed.
                 </div>
                 <div className='flex flex-col gap-1'>
                   <h3 className='text-xs mt-6 underline font-bold'>
@@ -273,9 +272,9 @@ useEffect(() => {
 
         <button
           onClick={downloadInvoiceAsPDF}
-          className='bg-button hover:bg-button-hover w-fit mx-auto px-4 font-bold rounded-lg py-2 '
+          className='bg-button hover:bg-button-hover w-fit mx-auto px-4 font-bold rounded-lg py-2 mb-5 '
         >
-          Save and Download
+          Download
         </button>
       </div>
     );
