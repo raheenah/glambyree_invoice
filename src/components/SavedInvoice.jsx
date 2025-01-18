@@ -101,7 +101,7 @@ useEffect(() => {
         {/* {invDetails ? <p>{invDetails.client}</p> : <p>Loading...</p>} */}
         {invDetails && invItems.length > 0 && (
           <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit  flex '>
-            <div className='border mx-auto  flex flex-col w-full border-input-border px-3 pt-6 pb-3'>
+            <div className='border mx-auto  flex flex-col w-full border-black bg-white text-black px-3 pt-6 pb-3'>
               <div className='flex flex-col justify-between '>
                 <div className='flex justify-between'>
                   <div className='flex flex-col'>
@@ -126,25 +126,46 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <div className='border-2 w-fit mb-5 mt-48 max-w-[50%] self-end border-input-border px-4 py-2'>
-                  <h1 className='font-semibold underline'>Bill To</h1>
-                  <div className='flex gap-1'>
-                    {/* <p className='font-semibold'>Name :</p> */}
-                    {invDetails.client}
+                <div className=' mb-5 mt-48 flex justify-between'>
+                  <div className='border-2 w-fit max-w-[45%]  border-black px-4 py-2'>
+                    <h1 className='font-semibold underline'>
+                      Appointment Details
+                    </h1>
+                    <div className='flex gap-1'>
+                      {/* <p className='font-semibold'>Name :</p> */}
+                      Type: <b>{invDetails.type}</b>
+                    </div>
+                    <div className='flex gap-1'>
+                      {/* <p className='font-semibold'>Number :</p> */}
+                      Date: <b>{invDetails.date}</b>
+                    </div>
+                    <div className='flex gap-1 text-wrap break-words w-full'>
+                      {/* <p className='font-semibold'>Address :</p> */}
+                      <p className=' w-full'>
+                        Time: <b>{invDetails.time}</b>
+                      </p>
+                    </div>
                   </div>
-                  <div className='flex gap-1'>
-                    {/* <p className='font-semibold'>Number :</p> */}
-                    {invDetails.number}
-                  </div>
-                  <div className='flex gap-1 text-wrap break-words w-full'>
-                    {/* <p className='font-semibold'>Address :</p> */}
-                    <p className=' w-full'>{invDetails.address}</p>
+                  <div className='border-2 w-fit  max-w-[50%] self-end border-black px-4 py-2'>
+                    <h1 className='font-semibold underline'>Bill To</h1>
+                    <div className='flex gap-1'>
+                      {/* <p className='font-semibold'>Name :</p> */}
+                      {invDetails.client}
+                    </div>
+                    <div className='flex gap-1'>
+                      {/* <p className='font-semibold'>Number :</p> */}
+                      {invDetails.number}
+                    </div>
+                    <div className='flex gap-1 text-wrap break-words w-full'>
+                      {/* <p className='font-semibold'>Address :</p> */}
+                      <p className=' w-full'>{invDetails.address}</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <table className=' w-full'>
-                <thead className='bg-table-header font-semibold'>
+                <thead className='bg-gray-400 font-semibold'>
                   <tr>
                     <td className='max-w-1/2 py-2 pl-2'>SERVICE</td>
                     <td className='max-w-1/6 py-2 text-right'>QTY</td>
@@ -160,7 +181,7 @@ useEffect(() => {
                     <tr
                       key={index}
                       className={`${
-                        index % 2 === 0 ? "bg-table-row" : "bg-background"
+                        index % 2 === 0 ? "bg-white" : "bg-gray-200"
                       } text-md`}
                     >
                       <td className='w-1/2 py-2 pl-2'>{item.item}</td>
@@ -175,21 +196,41 @@ useEffect(() => {
                       </td>
                     </tr>
                   ))}
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                      Sub-Total
+                    </td>
+                    <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
+                      ₦ {formatNumberWithCommas(invDetails.subtotal)}.00
+                    </td>
+                  </tr>
 
                   <tr>
                     <td></td>
                     <td></td>
-                    <td className='bg-table-header font-bold py-2 pl-2 text-right'>
+                    <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                      Discount
+                    </td>
+                    <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
+                      ₦ {formatNumberWithCommas(invDetails.discount)}.00
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td className='bg-gray-400 font-bold py-2 pl-2 text-right'>
                       Total
                     </td>
-                    <td className='bg-table-header font-bold py-2 text-right pr-2'>
+                    <td className='bg-gray-400 font-bold py-2 text-right pr-2'>
                       ₦ {formatNumberWithCommas(invDetails.total)}.00
                     </td>
                   </tr>
                 </tbody>
               </table>
 
-              <div className='border-2 my-5  w-fit max-w-[50%] self-end font-semibold  border-input-border px-4 py-2'>
+              <div className='border-2 my-5  w-fit max-w-[60%] self-end font-semibold  border-black px-4 py-2'>
                 <h1 className='font-semibold underline'>Payment Details</h1>
                 <div className='flex gap-1 items-center font-semibold'>
                   <p className='font-normal'>Bank : </p>Kuda MFB

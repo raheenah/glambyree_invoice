@@ -4,9 +4,12 @@
 
 export default class InvoiceList {
     static addInvoice(key, value) {
-    const    currentInvoiceList = JSON.parse(localStorage.getItem(key)) || [];
+        // console.log("adding to list...")
+        const currentInvoiceList = JSON.parse(localStorage.getItem(key)) || [];
+        // console.log(currentInvoiceList,"currentinlist")
         const updatedInvoiceList = [...currentInvoiceList, value];
         localStorage.setItem(key, JSON.stringify(updatedInvoiceList));
+        // console.log(updatedInvoiceList,"updatedinvlist")
     }
     static getInvoiceList(key) {
         return JSON.parse(localStorage.getItem(key)) || [];

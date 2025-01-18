@@ -14,7 +14,7 @@ export default class Invoice {
   static getLastInvoiceNumber(key) {
      try {
        const currentInvoice = localStorage.getItem("currentInvoiceNumber") || 65;
-       console.log("gotten currentinvoice", currentInvoice)
+      //  console.log("gotten currentinvoice", currentInvoice)
        return parseInt(currentInvoice, 10);
      } catch (error) {
        console.error("Failed to retrieve the current invoice number:", error);

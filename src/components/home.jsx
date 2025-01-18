@@ -16,12 +16,13 @@ const InvoicePage = () => {
   const [itemToAdd, setItemToAdd] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
-  const [invoiceTotal, setInvoiceTotal] = useState("");
+  const [invoiceTotal, setInvoiceTotal] = useState(0);
   const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({});
   const [appType, setAppType] = useState(null);
   const [appTime, setAppTime] = useState(null);
     const [appDate, setAppDate] = useState(null);
-  const [discount, setDiscount] = useState(null);
+  const [discount, setDiscount] = useState("0");
+  const [inSubTotal, setInvSubTotal] = useState("0")
 
 
 
@@ -69,17 +70,18 @@ const InvoicePage = () => {
         },
       ];
 
-      // Calculate total here
       const currentTotal = updatedList.reduce(
         (total, item) => total + item.amount,
         0
       );
 
-      // Return updated list
+      const actualTotal = currentTotal - discount;
       return updatedList;
     });
 
-    setInvoiceTotal(currentTotal);
+    // setInvSubTotal(currentTotal);
+    // setInvoiceTotal(actualTotal);
+
   };
 
   useEffect(() => {
@@ -87,8 +89,11 @@ const InvoicePage = () => {
       (total, item) => total + item.amount,
       0
     );
-    setInvoiceTotal(currentTotal); // Update total in state
-  }, [itemsList]);
+          const actualTotal = currentTotal - discount;
+
+    setInvSubTotal(currentTotal); 
+    setInvoiceTotal(actualTotal);
+  }, [itemsList, discount]);
 
   const invoiceRef = useRef();
 
@@ -124,6 +129,12 @@ const InvoicePage = () => {
       invoiceList: itemsList,
       total: invoiceTotal,
       invNumber: invoiceNumber,
+      discount: discount,
+      type: appType,
+      date: appDate,
+      time: appTime,
+      subtotal: inSubTotal,
+
     };
 
     InvoiceList.addInvoice("invoiceList", detailsToSave);
@@ -240,6 +251,14 @@ const InvoicePage = () => {
             />
           </div>
         </div>
+        <div className='flex flex-col self-end'>
+          <label className='font-semibold'>Invoice Discount</label>
+          <input
+            type='number'
+            onChange={(e) => setDiscount(e.target.value)}
+            className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+          />
+        </div>
       </div>
 
       <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit max-w-[100%] '>
@@ -337,6 +356,28 @@ const InvoicePage = () => {
                 <td></td>
                 <td></td>
                 <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                  Sub-Total
+                </td>
+                <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
+                  ₦ {formatNumberWithCommas(inSubTotal)}.00
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td></td>
+                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                  Discount
+                </td>
+                <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
+                  ₦ {formatNumberWithCommas(discount)}.00
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td></td>
+                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
                   Total
                 </td>
                 <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
@@ -361,7 +402,7 @@ const InvoicePage = () => {
           <div className='flex flex-col w-full'>
             <div className='text-xs '>
               <h2 className='font-extrabold text-xl'>
-                PLEASE READ BEFORE PAYMENT
+                PLEASE READ BEFORE PAYMENT ❗
               </h2>
               <ul>
                 <li>
