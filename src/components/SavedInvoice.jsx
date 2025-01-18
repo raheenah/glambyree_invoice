@@ -4,6 +4,8 @@ import Invoice from "../Data/InvoiceNumber";
 import InvoiceList from "../Data/Invoices";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Logo from "../assets/GBR LOGO white.png";
+
 
 const SavedInvoiceDetails = () => {
   const { invNum } = useParams();
@@ -15,7 +17,7 @@ const SavedInvoiceDetails = () => {
   const [invDetails, setInvDetails] = useState(null);
 const [invItems, setInvItems] = useState([])
     const [invoice, setInvoice] = useState({})
-    
+    const [isDownloading, setIsDownloading] = useState(false)
     
     
   const handleFetchInvDetails = () => {
@@ -23,10 +25,10 @@ const [invItems, setInvItems] = useState([])
      "invoiceList",
      currentInvNumber
       );
-          console.log(
-            details,
-            "details"
-          );
+          // console.log(
+          //   details,
+          //   "details"
+          // );
 
 
       setInvDetails(
@@ -35,20 +37,20 @@ details    );
   useEffect(() => {
       handleFetchInvDetails();
       
-    console.log(invDetails, "invdetails", currentInvNumber, "cuurentinvnumber");
+    // console.log(invDetails, "invdetails", currentInvNumber, "cuurentinvnumber");
   }, []);
     
     const handleSetInvoiceItems = () => {
-               console.log("setinv items running...");
+              //  console.log("setinv items running...");
 
         const items = invDetails.invoiceList;
-        console.log("setinv items running...")
+        // console.log("setinv items running...")
         setInvItems(items);
-        console.log(items, "items")
+        // console.log(items, "items")
 
     }
     useEffect(() => {
-        console.log("useeffect running.11..")
+        // console.log("useeffect running.11..")
         if (invDetails) {
             handleSetInvoiceItems();
         }
@@ -57,44 +59,74 @@ details    );
     },[invDetails])
     
 useEffect(() => {
-  console.log("useEffect for invItems running...");
-  console.log(invItems, "invItems");
+  // console.log("useEffect for invItems running...");
+  // console.log(invItems, "invItems");
 }, [invItems]); 
 
       const invoiceRef = useRef();
 
-      const downloadInvoiceAsPDF = async () => {
-        const element = invoiceRef.current;
+      // const downloadInvoiceAsPDF = async () => {
+      //   const element = invoiceRef.current;
 
-        // console.log(element, "element")
-        const fixedWidth = 1024;
-        const scale = 1;
+      //   // console.log(element, "element")
+      //   const fixedWidth = 1024;
+      //   const scale = 1;
 
-        const canvas = await html2canvas(element, {
-          scale: scale,
-          useCORS: true,
-          windowWidth: fixedWidth,
-          width: fixedWidth,
-        });
-        // console.log(canvas, "canvas")
+      //   const canvas = await html2canvas(element, {
+      //     scale: scale,
+      //     useCORS: true,
+      //     windowWidth: fixedWidth,
+      //     width: fixedWidth,
+      //   });
+      //   // console.log(canvas, "canvas")
 
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      //   const imgData = canvas.toDataURL("image/png");
+      //   const pdf = new jsPDF("p", "mm", "a4");
+      //   const pdfWidth = pdf.internal.pageSize.getWidth();
+      //   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("invoice.pdf");
+      //   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      //   pdf.save("invoice.pdf");
 
       
 
-      };
+      // };
 
       const formatNumberWithCommas = (num) => {
         return num.toLocaleString();
       };
 
-  
+  const downloadInvoiceAsPDF = async () => {
+    if (isDownloading) return; // If already downloading, prevent further execution
+
+    setIsDownloading(true); // Set the flag to true when the download starts
+
+    const element = invoiceRef.current;
+
+    const fixedWidth = 1024;
+    const scale = 1;
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: scale,
+        useCORS: true,
+        windowWidth: fixedWidth,
+        width: fixedWidth,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("invoice.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsDownloading (false); // Reset the flag once the download is done
+    }
+  };
   
     return (
       <div className='flex flex-col min-h-screen'>
@@ -104,15 +136,12 @@ useEffect(() => {
             <div className='border mx-auto  flex flex-col w-full border-black bg-white text-black px-3 pt-6 pb-3'>
               <div className='flex flex-col justify-between '>
                 <div className='flex justify-between'>
-                  <div className='flex flex-col'>
-                    <h1
-                      id='store'
-                      className='font-extrabold mb-6 text-text-accent text-5xl'
-                    >
-                      GlamByRee
-                    </h1>
-                    <p>Millenium Estate, Gbagada</p>
-                    <p>Lagos, Nigeria</p>
+                  <div className='flex flex-col max-w-[35%] '>
+                       <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
+                                    <div>
+                                      <p>Millenium Estate, Gbagada</p>
+                                      <p>Lagos, Nigeria</p>
+                                    </div>
                     {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
                 <p>Email : Nureeyah1503@icloud.com</p> */}

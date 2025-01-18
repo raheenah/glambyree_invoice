@@ -4,6 +4,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Invoice from "../Data/InvoiceNumber";
 import InvoiceList from "../Data/Invoices";
+import Logo from "../assets/GBR LOGO white.png";
+
 
 const InvoicePage = () => {
   const [itemsList, setItemsList] = useState([]);
@@ -21,8 +23,8 @@ const InvoicePage = () => {
   const [appType, setAppType] = useState(null);
   const [appTime, setAppTime] = useState(null);
     const [appDate, setAppDate] = useState(null);
-  const [discount, setDiscount] = useState("0");
-  const [inSubTotal, setInvSubTotal] = useState("0")
+  const [discount, setDiscount] = useState(0);
+  const [inSubTotal, setInvSubTotal] = useState(0)
 
 
 
@@ -134,7 +136,7 @@ const InvoicePage = () => {
       date: appDate,
       time: appTime,
       subtotal: inSubTotal,
-
+paid: false
     };
 
     InvoiceList.addInvoice("invoiceList", detailsToSave);
@@ -265,15 +267,18 @@ const InvoicePage = () => {
         <div className='border mx-auto  flex flex-col w-full text-black bg-white border-black px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
-              <div className='flex flex-col'>
-                <h1
+              <div className='flex flex-col max-w-[35%]'>
+                {/* <h1
                   id='store'
                   className='font-extrabold mb-6 text-black text-5xl'
                 >
                   GlamByRee
-                </h1>
-                <p>Millenium Estate, Gbagada</p>
-                <p>Lagos, Nigeria</p>
+                </h1> */}
+                <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
+                <div>
+                  <p>Millenium Estate, Gbagada</p>
+                  <p>Lagos, Nigeria</p>
+                </div>
                 {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
                 <p>Email : Nureeyah1503@icloud.com</p> */}

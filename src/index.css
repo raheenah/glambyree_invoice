@@ -14,3 +14,9 @@ body{
   font-family: "Dancing Script", serif;
 
 }
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;}
+.custom-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
