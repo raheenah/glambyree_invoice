@@ -18,6 +18,13 @@ const InvoicePage = () => {
   const [unitPrice, setUnitPrice] = useState("");
   const [invoiceTotal, setInvoiceTotal] = useState("");
   const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({});
+  const [appType, setAppType] = useState(null);
+  const [appTime, setAppTime] = useState(null);
+    const [appDate, setAppDate] = useState(null);
+  const [discount, setDiscount] = useState(null);
+
+
+
 
   const handleUpdateInvoiceNumber = () => {
     const totalInvoices = Invoice.getLastInvoiceNumber("currentInvoiceNumber");
@@ -136,34 +143,64 @@ const InvoicePage = () => {
 
   return (
     <div className='flex flex-col gap-4 py-4 bg-background text-text'>
-      <div className='grid grid-cols-2 items-start mx-3 gap-3'>
+      <div className='flex flex-col items-start mx-3 gap-3'>
         <div className='flex flex-col gap-2  w-full justify-self-center'>
           <h3 className=' font-extrabold text-text underline'>
-            Client Details
+            Appointment Details
           </h3>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Name</label>
-            <input
-              type='text'
-              onChange={(e) => setClientName(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
-          </div>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Number</label>
-            <input
-              type='text'
-              onChange={(e) => setClientNumber(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
-          </div>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Address</label>
-            <input
-              type='text'
-              onChange={(e) => setClientAddress(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
+          <div className='grid grid-cols-2 gap-2'>
+            <div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Client's Name</label>
+                <input
+                  type='text'
+                  onChange={(e) => setClientName(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Client's Number</label>
+                <input
+                  type='text'
+                  onChange={(e) => setClientNumber(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Client's Address</label>
+                <textarea
+                  // type='text-box'
+                  onChange={(e) => setClientAddress(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+            </div>
+            <div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Appointment Type</label>
+                <input
+                  type='text'
+                  onChange={(e) => setAppType(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Appointment Date</label>
+                <input
+                  type='date'
+                  onChange={(e) => setAppDate(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+              <div className='flex flex-col'>
+                <label className='font-semibold'>Appointment Time</label>
+                <input
+                  type='time'
+                  onChange={(e) => setAppTime(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className='flex flex-col gap-2 w-full justify-self-center'>
@@ -205,14 +242,14 @@ const InvoicePage = () => {
         </div>
       </div>
 
-      <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit '>
-        <div className='border mx-auto  flex flex-col w-full border-input-border px-3 pt-6 pb-3'>
+      <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit max-w-[100%] '>
+        <div className='border mx-auto  flex flex-col w-full text-black bg-white border-black px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
               <div className='flex flex-col'>
                 <h1
                   id='store'
-                  className='font-extrabold mb-6 text-text-accent text-5xl'
+                  className='font-extrabold mb-6 text-black text-5xl'
                 >
                   GlamByRee
                 </h1>
@@ -231,25 +268,44 @@ const InvoicePage = () => {
               </div>
             </div>
 
-            <div className='border-2 w-fit mb-5 mt-48 max-w-[50%] self-end border-input-border px-4 py-2'>
-              <h1 className='font-semibold underline'>Bill To</h1>
-              <div className='flex gap-1'>
-                {/* <p className='font-semibold'>Name :</p> */}
-                {clientName}
+            <div className=' mb-5 mt-48 flex justify-between'>
+              <div className='border-2 w-fit max-w-[45%]  border-black px-4 py-2'>
+                <h1 className='font-semibold underline'>Appointment Details</h1>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Name :</p> */}
+                  Type: <b>{appType}</b>
+                </div>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Number :</p> */}
+                  Date: <b>{appDate}</b>
+                </div>
+                <div className='flex gap-1 text-wrap break-words w-full'>
+                  {/* <p className='font-semibold'>Address :</p> */}
+                  <p className=' w-full'>
+                    Time: <b>{appTime}</b>
+                  </p>
+                </div>
               </div>
-              <div className='flex gap-1'>
-                {/* <p className='font-semibold'>Number :</p> */}
-                {clientNumber}
-              </div>
-              <div className='flex gap-1 text-wrap break-words w-full'>
-                {/* <p className='font-semibold'>Address :</p> */}
-                <p className=' w-full'>{clientAddress}</p>
+              <div className='border-2 w-fit  max-w-[45%]  border-black px-4 py-2'>
+                <h1 className='font-semibold underline'>Bill To</h1>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Name :</p> */}
+                  {clientName}
+                </div>
+                <div className='flex gap-1'>
+                  {/* <p className='font-semibold'>Number :</p> */}
+                  {clientNumber}
+                </div>
+                <div className='flex gap-1 text-wrap break-words w-full'>
+                  {/* <p className='font-semibold'>Address :</p> */}
+                  <p className=' w-full'>{clientAddress}</p>
+                </div>
               </div>
             </div>
           </div>
 
           <table className=' w-full'>
-            <thead className='bg-table-header  font-semibold '>
+            <thead className='bg-gray-400  font-semibold '>
               <tr className=' '>
                 <td className='w-1/2 py-2 pl-2'>SERVICE</td>
                 <td className='max-w-1/12 py-2 text-right'>QTY</td>
@@ -262,7 +318,7 @@ const InvoicePage = () => {
               {itemsList.map((item, index) => (
                 <tr
                   key={index}
-                  className={index % 2 === 0 ? "bg-table-row" : "bg-background"}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-200"}
                 >
                   <td className='w-1/2 py-2 pl-2'>{item.item}</td>
                   <td className='max-w-1/12 py-2 text-right'>
@@ -280,16 +336,16 @@ const InvoicePage = () => {
               <tr>
                 <td></td>
                 <td></td>
-                <td className='bg-table-header font-bold py-2 pl-2  text-right '>
+                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
                   Total
                 </td>
-                <td className='bg-table-header font-bold py-2 text-right pr-2 '>
+                <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
                   ₦ {formatNumberWithCommas(invoiceTotal)}.00
                 </td>
               </tr>
             </tbody>
           </table>
-          <div className='border-2  my-5 w-fit max-w-[50%] self-end font-semibold  border-input-border px-4 py-2'>
+          <div className='border-2  my-5 w-fit max-w-[60%] self-end font-semibold  border-black px-4 py-2'>
             <h1 className='font-semibold underline'>Payment Details</h1>
             <div className='flex gap-1 items-center font-semibold'>
               <p className='font-normal '>Bank : </p>Kuda MFB
