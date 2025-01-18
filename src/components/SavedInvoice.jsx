@@ -17,7 +17,7 @@ const SavedInvoiceDetails = () => {
   const [invDetails, setInvDetails] = useState(null);
 const [invItems, setInvItems] = useState([])
     const [invoice, setInvoice] = useState({})
-    const [isDownloading, setIsDownloading] = useState(false)
+    // const [isDownloading, setIsDownloading] = useState(false)
     
     
   const handleFetchInvDetails = () => {
@@ -65,68 +65,38 @@ useEffect(() => {
 
       const invoiceRef = useRef();
 
-      // const downloadInvoiceAsPDF = async () => {
-      //   const element = invoiceRef.current;
+      const downloadInvoiceAsPDF = async () => {
+        const element = invoiceRef.current;
 
-      //   // console.log(element, "element")
-      //   const fixedWidth = 1024;
-      //   const scale = 1;
+        // console.log(element, "element")
+        const fixedWidth = 1024;
+        const scale = 1;
 
-      //   const canvas = await html2canvas(element, {
-      //     scale: scale,
-      //     useCORS: true,
-      //     windowWidth: fixedWidth,
-      //     width: fixedWidth,
-      //   });
-      //   // console.log(canvas, "canvas")
+        const canvas = await html2canvas(element, {
+          scale: scale,
+          useCORS: true,
+          windowWidth: fixedWidth,
+          width: fixedWidth,
+        });
+        // console.log(canvas, "canvas")
 
-      //   const imgData = canvas.toDataURL("image/png");
-      //   const pdf = new jsPDF("p", "mm", "a4");
-      //   const pdfWidth = pdf.internal.pageSize.getWidth();
-      //   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      //   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      //   pdf.save("invoice.pdf");
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save("invoice.pdf");
 
       
 
-      // };
+      };
 
       const formatNumberWithCommas = (num) => {
         return num.toLocaleString();
       };
 
-  const downloadInvoiceAsPDF = async () => {
-    if (isDownloading) return; // If already downloading, prevent further execution
-
-    setIsDownloading(true); // Set the flag to true when the download starts
-
-    const element = invoiceRef.current;
-
-    const fixedWidth = 1024;
-    const scale = 1;
-
-    try {
-      const canvas = await html2canvas(element, {
-        scale: scale,
-        useCORS: true,
-        windowWidth: fixedWidth,
-        width: fixedWidth,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("invoice.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } finally {
-      setIsDownloading (false); // Reset the flag once the download is done
-    }
-  };
+  
   
     return (
       <div className='flex flex-col min-h-screen'>
