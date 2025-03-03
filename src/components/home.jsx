@@ -25,6 +25,7 @@ const InvoicePage = () => {
     const [appDate, setAppDate] = useState(null);
   const [discount, setDiscount] = useState(0);
   const [inSubTotal, setInvSubTotal] = useState(0)
+  const [selectedBusiness, setSelectedBusiness] = useState("glambyree");
 
 
 
@@ -136,6 +137,7 @@ const InvoicePage = () => {
       date: appDate,
       time: appTime,
       subtotal: inSubTotal,
+      brand: selectedBusiness, 
 paid: false
     };
 
@@ -190,6 +192,17 @@ paid: false
             </div>
             <div>
               <div className='flex flex-col'>
+                <label className='font-semibold'>Business</label>
+                <select
+                  value={selectedBusiness}
+                  onChange={(e) => setSelectedBusiness(e.target.value)}
+                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
+                >
+                  <option value='glambyree'>Glambyree</option>
+                  <option value='lumiere'>Lumière</option>
+                </select>
+              </div>
+              <div className='flex flex-col'>
                 <label className='font-semibold'>Appointment Type</label>
                 <input
                   type='text'
@@ -197,6 +210,7 @@ paid: false
                   className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
                 />
               </div>
+
               <div className='flex flex-col'>
                 <label className='font-semibold'>Appointment Date</label>
                 <input
@@ -274,7 +288,11 @@ paid: false
                 >
                   GlamByRee
                 </h1> */}
-                <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
+                {selectedBusiness === "glambyree" && (
+                  <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
+                )}
+                {selectedBusiness === "lumiere" && <h1 id="store" className="text-6xl">Lumière</h1>}
+
                 <div>
                   <p>Millenium Estate, Gbagada</p>
                   <p>Lagos, Nigeria</p>

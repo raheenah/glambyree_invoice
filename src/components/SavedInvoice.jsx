@@ -37,7 +37,7 @@ details    );
   useEffect(() => {
       handleFetchInvDetails();
       
-    // console.log(invDetails, "invdetails", currentInvNumber, "cuurentinvnumber");
+    console.log(invDetails, "invdetails", currentInvNumber, "cuurentinvnumber");
   }, []);
     
     const handleSetInvoiceItems = () => {
@@ -107,11 +107,23 @@ useEffect(() => {
               <div className='flex flex-col justify-between '>
                 <div className='flex justify-between'>
                   <div className='flex flex-col max-w-[35%] '>
-                       <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
-                                    <div>
-                                      <p>Millenium Estate, Gbagada</p>
-                                      <p>Lagos, Nigeria</p>
-                                    </div>
+                    {(invDetails.brand === "glambyree" || !invDetails.brand) && (
+                      <img
+                        src={Logo}
+                        alt='Glam By Ree Logo'
+                        className='w-fit'
+                      />
+                    )}
+                    {invDetails.brand === "lumiere" && (
+                      <h1 id='store' className='text-6xl'>
+                        Lumière
+                      </h1>
+                    )}
+
+                    <div>
+                      <p>Millenium Estate, Gbagada</p>
+                      <p>Lagos, Nigeria</p>
+                    </div>
                     {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
                 <p>Email : Nureeyah1503@icloud.com</p> */}
