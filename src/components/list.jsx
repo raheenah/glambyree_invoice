@@ -7,7 +7,7 @@ import { use } from "react";
 const HomePage = () => {
   const [invoiceList, setInvoiceList] = useState([]);
   const navigate = useNavigate();
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   const [totalPages, setTotalPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginatedList, setPaginatedList] = useState([]);
@@ -216,7 +216,7 @@ const HomePage = () => {
       onClick={() => {
         setFilterOpen(false);
       }}
-      className='flex flex-col gap-3 py-4 px-3 min-h-screen'
+      className='flex flex-col gap-8 py-4 px-3 min-h-screen'
     >
       <div className='relative flex justify-between'>
         <button
@@ -401,11 +401,11 @@ const HomePage = () => {
           </div>
         )}
       </div>
-      <ul className='flex flex-col  gap-4'>
+      <ul className='flex flex-col md: min-h-screen  gap-4'>
         {paginatedList.map((item, index) => (
           <li
             key={index}
-            className='bg-input-border border-b-2 py-2 border-b-button-hover shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary flex gap-2 flex-col items-center   w-[70%] mx-auto rounded-lg '
+            className='bg-input-border border-b-2 py-2 border-b-button-hover shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary flex gap-2 flex-col items-center   w-[80%] mx-auto rounded-lg '
           >
             {" "}
             <NavLink
