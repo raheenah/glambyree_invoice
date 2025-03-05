@@ -18,7 +18,7 @@ function App() {
             <Route path='/list' element={<HomePage />} />
             <Route path='/add' element={<InvoicePage />} />
             <Route path='/:invNum' element={<SavedInvoiceDetails />} />
-            <Route path='/*' element={<NotFound />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </div>
         {/* <Footer /> */}
