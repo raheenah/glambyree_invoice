@@ -6,6 +6,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/GBR LOGO white.png";
+import html2pdf from "html2pdf.js";
+
 
 
 const SavedInvoiceDetails = () => {
@@ -67,27 +69,19 @@ useEffect(() => {
       const invoiceRef = useRef();
 
       const downloadInvoiceAsPDF = async () => {
-        const element = invoiceRef.current;
+ const element = invoiceRef.current; // The invoice container
 
-        // console.log(element, "element")
-        const fixedWidth = 1024;
-        const scale = 1;
-
-        const canvas = await html2canvas(element, {
-          scale: scale,
-          useCORS: true,
-          windowWidth: fixedWidth,
-          width: fixedWidth,
-        });
-        // console.log(canvas, "canvas")
-
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("invoice.pdf");
+ html2pdf()
+   .from(element)
+   .set({
+     margin: 10,
+     filename: "invoice.pdf",
+     image: { type: "jpeg", quality: 0.98 },
+     html2canvas: { scale: 2, useCORS: true },
+     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+   })
+   .save();
+    
 
       
 
@@ -117,7 +111,7 @@ useEffect(() => {
             <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
             <p>Back to list</p>
           </NavLink>
-          <div className="flex justify-evenly">
+          <div className='flex justify-evenly'>
             <p className='flex  gap-2 items-center'>
               {" "}
               Payment Status:{" "}
@@ -150,49 +144,61 @@ useEffect(() => {
           <div ref={invoiceRef} className='   my-3  w-fit  flex '>
             <div className='border mx-auto  flex flex-col w-full border-black bg-white text-black px-3 pt-6 pb-3'>
               <div className='flex flex-col justify-between '>
-                <div className='flex justify-between'>
-                  <div className='flex flex-col max-w-[35%] '>
+                <div className='flex flex-col gap-4 justify-between'>
+                  <div className='flex w-full  justify-between gap-2  '>
                     {(invDetails.brand === "glambyree" ||
                       !invDetails.brand) && (
                       <img
                         src={Logo}
                         alt='Glam By Ree Logo'
-                        className='w-fit'
+                        className='w-fit max-w-[35%]'
                       />
                     )}
                     {invDetails.brand === "lumiere" && (
-                      <h1 id='store' className='text-6xl'>
+                      <h1 id='store' className='text-6xl '>
                         Lumière
                       </h1>
                     )}
-
-                    <div>
-                      <p>Millenium Estate, Gbagada</p>
-                      <p>Lagos, Nigeria</p>
+                    <div className='flex flex-col text-right w-fit gap-2 items-end '>
+                      <h2 className='font-extrabold text-xl'>
+                        Invoice # {invDetails.invNumber}
+                      </h2>
+                      <div
+                        className='flex
+                       flex-col items-start'
+                      >
+                        {" "}
+                        <p>Date: {invDetails.invoiceDate}</p>
+                        <p>Due: {invDetails.expiryDate}</p>
+                      </div>{" "}
                     </div>
+
                     {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
                 <p>Email : Nureeyah1503@icloud.com</p> */}
                   </div>
-                  <div className='flex flex-col items-start mt-4'>
-                    <h2 className='font-extrabold text-xl'>
-                      Invoice # {invDetails.invNumber}
-                    </h2>
-                    <p>Date : {invDetails.invoiceDate}</p>
+                  <div className='grid  grid-cols-2 gap-16'>
+                    {" "}
+                    <div
+                      className='flex 
+                    flex-col items-start text-left'
+                    >
+                      <p>Millenium Estate, Gbagada</p>
+                      <p>Lagos, Nigeria</p>
+                    </div>
                     {invDetails?.paid && (
                       <p
-                        className={`font-regular text-center bg-button-paid text-text-paid z-10 font-extrabold py-2 mt-4 text-3xl shadow-customDark   w-full    rounded-lg
+                        className={`font-regular  text-center bg-button-paid text-text-paid z-10 font-extrabold py-2 text-3xl shadow-customDark   w-full    rounded-lg
                     `}
                       >
                         Paid{" "}
                       </p>
-                    )}
-                    {/* <p>Valid till : {expirationDate}</p> */}
+                    )}{" "}
                   </div>
                 </div>
 
-                <div className=' mb-5 mt-48 flex justify-between'>
-                  <div className='border-2 w-fit max-w-[45%]  border-black px-4 py-2'>
+                <div className=' mb-5 mt-16 flex items-start bg-gray-100 justify-between'>
+                  <div className='w-fit text-sm max-w-[45%]   px-4 py-2'>
                     <h1 className='font-semibold underline'>
                       Appointment Details
                     </h1>
@@ -210,8 +216,8 @@ useEffect(() => {
                         Time: <b>{invDetails.time}</b>
                       </p>
                     </div>
-                  </div>
-                  <div className='border-2 w-fit  max-w-[50%] self-end border-black px-4 py-2'>
+                  </div>{" "}
+                  <div className=' w-fit   max-w-[50%]  text-sm  px-4 py-2'>
                     <h1 className='font-semibold underline'>Bill To</h1>
                     <div className='flex gap-1'>
                       {/* <p className='font-semibold'>Name :</p> */}
@@ -225,7 +231,7 @@ useEffect(() => {
                       {/* <p className='font-semibold'>Address :</p> */}
                       <p className=' w-full'>{invDetails.address}</p>
                     </div>
-                  </div>
+                  </div>{" "}
                 </div>
               </div>
 
@@ -241,7 +247,7 @@ useEffect(() => {
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className=''>
                   {invItems.map((item, index) => (
                     <tr
                       key={index}
@@ -261,18 +267,61 @@ useEffect(() => {
                       </td>
                     </tr>
                   ))}
-                  <tr>
+                  <tr className=' '>
+                    <td className='col-span-2'>
+                      <div className='bg-gray-100  text-sm w-fit  self-end font-semibold  border-black px-4 py-2'>
+                        <h1 className='font-semibold underline'>
+                          Payment Details
+                        </h1>
+                        <div className='flex gap-1 items-center font-semibold'>
+                          <p className='font-normal'>Bank: </p>Kuda MFB
+                        </div>
+                        <div className='flex gap-1 items-center'>
+                          <p className='font-normal'>Account Number: </p>
+                          2016366060
+                        </div>
+                        <div className='flex gap-1'>
+                          <p className='font-normal items-center'>
+                            Account Name:
+                          </p>
+                          Nureeyah Ogunmuyiwa
+                        </div>
+                      </div>
+                    </td>
                     <td></td>
-                    <td></td>
-                    <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
-                      Sub-Total
+                    <td className='bg-gray-400'>
+                      <table className=' w-full'>
+                        <tr className=' grid '>
+                          <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                            Sub-Total
+                          </td>
+                          <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                            Discount
+                          </td>
+                          <td className='bg-gray-400 font-bold py-2 pl-2 text-right'>
+                            Total
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                     <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
-                      ₦ {formatNumberWithCommas(invDetails.subtotal)}.00
+                      <table className=' w-full'>
+                        <tr className=' grid '>
+                          <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                            ₦ {formatNumberWithCommas(invDetails.subtotal)}.00
+                          </td>
+                          <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                            ₦ {formatNumberWithCommas(invDetails.discount)}.00
+                          </td>
+                          <td className='bg-gray-400 font-bold py-2 pl-2 text-right'>
+                            ₦ {formatNumberWithCommas(invDetails.total)}.00
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                   </tr>
 
-                  <tr>
+                  {/* <tr>
                     <td></td>
                     <td></td>
                     <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
@@ -291,27 +340,13 @@ useEffect(() => {
                     <td className='bg-gray-400 font-bold py-2 text-right pr-2'>
                       ₦ {formatNumberWithCommas(invDetails.total)}.00
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
 
-              <div className='border-2 my-5  w-fit max-w-[60%] self-end font-semibold  border-black px-4 py-2'>
-                <h1 className='font-semibold underline'>Payment Details</h1>
-                <div className='flex gap-1 items-center font-semibold'>
-                  <p className='font-normal'>Bank : </p>Kuda MFB
-                </div>
-                <div className='flex gap-1 items-center'>
-                  <p className='font-normal'>Account Number : </p>2016366060
-                </div>
-                <div className='flex gap-1'>
-                  <p className='font-normal items-center'>Account Name :</p>
-                  Nureeyah Ogunmuyiwa
-                </div>
-              </div>
-
-              <div className='flex flex-col w-full'>
-                <div className='text-xs mt-3 '>
-                  <h2 className='font-extrabold   text-xl'>
+              <div className='flex mt-8 flex-col w-full'>
+                <div className='text-xs mt-1 '>
+                  <h2 className='font-extrabold   text-sm'>
                     PLEASE READ BEFORE PAYMENT❗
                   </h2>
                   <ul>
@@ -355,7 +390,7 @@ useEffect(() => {
                   outlined above. Kindly share payment receipt once completed.
                 </div>
                 <div className='flex flex-col gap-1'>
-                  <h3 className='text-xs mt-6 underline font-bold'>
+                  <h3 className='text-xs mt-1 underline  font-bold'>
                     For inquiries;
                   </h3>
                   <div className='flex w-full text-[10px] self-end gap-2 items-center'>
@@ -363,7 +398,7 @@ useEffect(() => {
                       <i className='fa-brands fa-instagram'></i>@Glambyree
                     </p>
                     <p className=' w-fit flex gap-1 items-center'>
-                      <i className='fa-solid fa-phone'></i>08106491158
+                      <i className='fa-solid fa-phone'></i>09120504758
                     </p>
                     <p className=' w-fit flex gap-1 items-center'>
                       <i className='fa-solid fa-envelope'></i>

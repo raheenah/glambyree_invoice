@@ -221,6 +221,7 @@ const HomePage = () => {
       <div className='relative flex justify-between'>
         <button
           onClick={() => setDetailsOpen(!detailsOpen)}
+          title="payment details"
           className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button   rounded-lg py-1'
         >
           <i className='fa-solid fa-circle-info'></i>{" "}
@@ -228,6 +229,7 @@ const HomePage = () => {
         <div className='flex gap-4 justify-between '>
           <button
             onClick={handleNavigateToCreateInvoice}
+            title="create new"
             className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
           >
             <i className='fa-solid fa-plus'></i>{" "}
@@ -236,6 +238,7 @@ const HomePage = () => {
             onClick={(e) => {
               setFilterOpen(!filterOpen), e.stopPropagation();
             }}
+            title="filters"
             className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button   rounded-lg py-1'
           >
             {!filterOpen && <i className='fa-solid fa-filter'></i>}
@@ -245,7 +248,7 @@ const HomePage = () => {
         {filterOpen && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className='right-0 absolute w-[70%]  bg-background p-4 gap-3  text-sm   rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)]  transition-transform duration-300 px-4 py-6'
+            className='right-0 top-full absolute w-[70%]  bg-background p-4 gap-3  text-sm   rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)]  transition-transform duration-300 px-4 py-6'
           >
             {/* <div className='flex z-34 w-full h-full items-center justify-center'> */}
             {/* <div
@@ -401,11 +404,11 @@ const HomePage = () => {
           </div>
         )}
       </div>
-      <ul className='flex flex-col md: min-h-screen  gap-4'>
+      <ul className='flex flex-col    gap-4'>
         {paginatedList.map((item, index) => (
           <li
             key={index}
-            className='bg-input-border border-b-2 py-2 border-b-button-hover shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary flex gap-2 flex-col items-center   w-[80%] mx-auto rounded-lg '
+            className='bg-input-border border-b-2 py-2 border-b-button-hover shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary flex gap-2 flex-col items-center   w-[80%]  mx-auto rounded-lg '
           >
             {" "}
             <NavLink

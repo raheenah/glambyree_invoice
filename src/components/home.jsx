@@ -5,6 +5,8 @@ import jsPDF from "jspdf";
 import Invoice from "../Data/InvoiceNumber";
 import InvoiceList from "../Data/Invoices";
 import Logo from "../assets/GBR LOGO white.png";
+import html2pdf from "html2pdf.js";
+
 import { NavLink , useNavigate } from "react-router-dom";
 
 
@@ -106,27 +108,18 @@ const InvoicePage = () => {
   const invoiceRef = useRef();
 
   const downloadInvoiceAsPDF = async () => {
-    const element = invoiceRef.current;
-
-    // console.log(element, "element")
-    const fixedWidth = 1024;
-    const scale = 2;
-
-    const canvas = await html2canvas(element, {
-      scale: scale,
-      useCORS: true,
-      windowWidth: fixedWidth,
-      width: fixedWidth,
-    });
-    // console.log(canvas, "canvas")
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("invoice.pdf");
+   const element = invoiceRef.current; // The invoice container
+   
+    html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: "invoice.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .save();
 
     const detailsToSave = {
       client: clientName,
@@ -193,27 +186,25 @@ const InvoicePage = () => {
           <NavLink
             onClick={(e) => {
               e.preventDefault();
-              if (window.history.length > 1) {
-                navigate(-1);
-              } else {
-                navigate("/list");
-              }
+
+              navigate("/list");
             }}
             className='  flex gap-2 hover:text-text-secondary  items-center'
           >
-            <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
-            <p className='hidden md:block'>Back to list</p>
+            {/* <i className='fa-solid text-inherit fa-angle-left'></i>{" "} */}
+            <p className='font-bold'>Go to list</p>
           </NavLink>
           <div className='flex py-2 gap-2 font-dancing  px-8 shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] rounded-lg bg-button text-center   mx-auto  items-center justify-evenly '>
             <button
               // value={selectedBusiness}
               // value='glambyree'
               onClick={() => setSelectedBusiness("glambyree")}
-              className={`p-2 rounded-lg font-semibold transition-all duration-300 ${
+              className={`p-2 rounded-lg font-semibold text-text transition-all duration-300 ${
                 selectedBusiness === "glambyree"
-                  ? "bg-button-hover text-white shadow-lg"
-                  : "text-text-secondary hover:text-white hover:underline"
-              }`}
+                  ? "bg-background hover:bg-background-secondary  shadow-lg"
+                  : " hover:text-background text-text hover:underline"
+              }         font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)]  mx-auto  w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+`}
             >
               Glambyree
             </button>{" "}
@@ -222,17 +213,19 @@ const InvoicePage = () => {
               // value={selectedBusiness}
               // value='lumiere'
               onClick={() => setSelectedBusiness("lumiere")}
-              className={`p-2 rounded-lg font-semibold transition-all duration-300 ${
+              className={`p-2 rounded-lg font-semibold text-text transition-all duration-300 ${
                 selectedBusiness === "lumiere"
-                  ? "bg-button-hover text-white shadow-lg"
-                  : "text-text-secondary hover:text-white hover:underline"
-              }`}
+                  ? "bg-background hover:bg-background-secondary  shadow-lg"
+                  : " hover:text-background text-text hover:underline"
+              }         font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)]  mx-auto  w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+`}
             >
               Lumière
             </button>
           </div>
           <button
             className='hover:text-text-secondary '
+            title='customize'
             onClick={() => {
               setIsAsideVisible(!isAsideVisible);
             }}
@@ -379,6 +372,7 @@ const InvoicePage = () => {
                     <button
                       onClick={handleAddNewItem}
                       type='button'
+                      title='add item'
                       className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
                     >
                       Add
@@ -398,45 +392,58 @@ const InvoicePage = () => {
         }}
         className=' px-3  my-3  w-fit max-w-[100%] '
       >
-        <div className='border mx-auto  flex flex-col w-full text-black bg-white border-black px-3 pt-6 pb-3'>
+        <div className='border mx-auto  flex flex-col w-full border-black bg-white text-black px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
-            <div className='flex justify-between'>
-              <div className='flex flex-col  max-w-[35%]'>
-                {/* <h1
-                  id='store'
-                  className='font-extrabold mb-6 text-black text-5xl'
-                >
-                  GlamByRee
-                </h1> */}
+            <div className='flex flex-col gap-4 justify-between'>
+              <div className='flex w-full  justify-between gap-2  '>
                 {selectedBusiness === "glambyree" && (
-                  <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
+                  <img
+                    src={Logo}
+                    alt='Glam By Ree Logo'
+                    className='w-fit max-w-[35%]'
+                  />
                 )}
                 {selectedBusiness === "lumiere" && (
-                  <h1 id='store' className='text-6xl font-dancing'>
+                  <h1 id='store' className='text-6xl '>
                     Lumière
                   </h1>
                 )}
-
-                <div>
-                  <p>Millenium Estate, Gbagada</p>
-                  <p>Lagos, Nigeria</p>
+                <div className='flex flex-col text-right w-fit gap-2 items-end '>
+                  <h2 className='font-extrabold text-xl'>
+                    Invoice # {invoiceNumber}
+                  </h2>
+                  <div
+                    className='flex
+                       flex-col items-start'
+                  >
+                    <p>Date: {date}</p>
+                    <p>Due: {expirationDate}</p>
+                  </div>
+                  {/* <p>Valid till : {expirationDate}</p> */}
                 </div>
+
                 {/* <p>Instagram : @Glambyree</p>
                 <p>Mobile : 08106491158</p>
                 <p>Email : Nureeyah1503@icloud.com</p> */}
               </div>
-              <div className='flex flex-col items-start mt-4'>
-                <h2 className='font-extrabold text-xl'>
-                  Invoice # {invoiceNumber}
-                </h2>
-                <p>Date : {date}</p>
+              <div className='grid  grid-cols-2 gap-16'>
+                {" "}
+                <div
+                  className='flex 
+                    flex-col items-start text-left'
+                >
+                  <p>Millenium Estate, Gbagada</p>
+                  <p>Lagos, Nigeria</p>
+                </div>
                 {/* <p>Valid till : {expirationDate}</p> */}
               </div>
             </div>
 
-            <div className=' mb-5 mt-48 flex justify-between'>
-              <div className='border-2 w-fit max-w-[45%]  border-black px-4 py-2'>
-                <h1 className='font-semibold underline'>Appointment Details</h1>
+            <div className=' mb-5 mt-16 flex items-start bg-gray-100 justify-between'>
+              <div className=' w-fit text-sm  max-w-[45%]    px-4 py-2'>
+                <h1 className='font-semibold  underline'>
+                  Appointment Details
+                </h1>
                 <div className='flex gap-1'>
                   {/* <p className='font-semibold'>Name :</p> */}
                   Type: <b>{appType}</b>
@@ -452,9 +459,9 @@ const InvoicePage = () => {
                   </p>
                 </div>
               </div>
-              <div className='border-2 w-fit  max-w-[45%]  border-black px-4 py-2'>
+              <div className=' w-fit text-sm  max-w-[50%]    px-4 py-2'>
                 <h1 className='font-semibold underline'>Bill To</h1>
-                <div className='flex gap-1'>
+                <div className='flex gap-1 '>
                   {/* <p className='font-semibold'>Name :</p> */}
                   {clientName}
                 </div>
@@ -500,54 +507,60 @@ const InvoicePage = () => {
               ))}
 
               <tr>
-                <td></td>
-                <td></td>
-                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
-                  Sub-Total
+                <td>
+                  <div className='bg-gray-100   w-fit text-sm self-end font-semibold  border-black px-4 py-2'>
+                    <h1 className='font-semibold underline'>Payment Details</h1>
+                    <div className='flex gap-1 items-center font-semibold'>
+                      <p className='font-normal '>Bank : </p>Kuda MFB
+                    </div>
+                    <div className='flex gap-1 items-center'>
+                      <p className='font-normal'>Account Number : </p>2016366060
+                    </div>
+                    <div className='flex gap-1 items-center'>
+                      <p className='font-normal'>Account Name :</p>Nureeyah
+                      Ogunmuyiwa
+                    </div>
+                  </div>
                 </td>
-                <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
-                  ₦ {formatNumberWithCommas(inSubTotal)}.00
-                </td>
-              </tr>
+                <td></td>
 
-              <tr>
-                <td></td>
-                <td></td>
-                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
-                  Discount
+                <td className='bg-gray-400'>
+                  <table className=' w-full'>
+                    <tr className=' grid '>
+                      <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                        Sub-Total
+                      </td>
+                      <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                        Discount
+                      </td>
+                      <td className='bg-gray-400 font-bold py-2 pl-2 text-right'>
+                        Total
+                      </td>
+                    </tr>
+                  </table>
                 </td>
-                <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
-                  ₦ {formatNumberWithCommas(discount)}.00
-                </td>
-              </tr>
 
-              <tr>
-                <td></td>
-                <td></td>
-                <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
-                  Total
-                </td>
                 <td className='bg-gray-400 font-bold py-2 text-right pr-2 '>
-                  ₦ {formatNumberWithCommas(invoiceTotal)}.00
+                  <table className=' w-full'>
+                    <tr className=' grid '>
+                      <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                        ₦ {formatNumberWithCommas(inSubTotal)}.00
+                      </td>
+                      <td className='bg-gray-400 font-bold py-2 pl-2  text-right '>
+                        ₦ {formatNumberWithCommas(discount)}.00
+                      </td>
+                      <td className='bg-gray-400 font-bold py-2 pl-2 text-right'>
+                        ₦ {formatNumberWithCommas(invoiceTotal)}.00
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div className='border-2  my-5 w-fit max-w-[60%] self-end font-semibold  border-black px-4 py-2'>
-            <h1 className='font-semibold underline'>Payment Details</h1>
-            <div className='flex gap-1 items-center font-semibold'>
-              <p className='font-normal '>Bank : </p>Kuda MFB
-            </div>
-            <div className='flex gap-1 items-center'>
-              <p className='font-normal'>Account Number : </p>2016366060
-            </div>
-            <div className='flex gap-1 items-center'>
-              <p className='font-normal'>Account Name :</p>Nureeyah Ogunmuyiwa
-            </div>
-          </div>
 
-          <div className='flex flex-col w-full'>
-            <div className='text-xs '>
+          <div className='flex mt-8 flex-col w-full'>
+            <div className='text-xs mt-1 '>
               <h2 className='font-extrabold text-xl'>
                 PLEASE READ BEFORE PAYMENT ❗
               </h2>
@@ -602,7 +615,7 @@ const InvoicePage = () => {
                   <i className='fa-brands fa-instagram'></i>@Glambyree
                 </p>
                 <p className=' w-fit flex gap-1 items-center'>
-                  <i className='fa-solid fa-phone'></i>08106491158
+                  <i className='fa-solid fa-phone'></i>09120504758
                 </p>
                 <p className=' w-fit flex gap-1 items-center'>
                   <i className='fa-solid fa-envelope'></i>

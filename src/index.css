@@ -21,4 +21,13 @@ body{
   scrollbar-width: none; 
 }
 
+.invoice-container {
+  position: relative;
+  background-color: #f3f4f6; /* Example for gray background */
+  padding: 20px;
+  width: 100%;
+  height: auto; /* Ensure height is stable */
+}
+
+
 
