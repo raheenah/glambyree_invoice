@@ -5,19 +5,20 @@ import HomePage from "./components/list";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SavedInvoiceDetails from "./components/SavedInvoice";
-
+import NotFound from "./components/404";
 
 function App() {
   return (
     <>
       <Router>
         {/* <NavBar /> */}
-        <div className=" text-text bg-background">
+        <div className=' text-text bg-background'>
           <Routes>
-            <Route path="/" element={<Navigate to= "/add"/>}/>
+            <Route path='/' element={<Navigate to='/add' />} />
             <Route path='/list' element={<HomePage />} />
             <Route path='/add' element={<InvoicePage />} />
-            <Route path="/:invNum" element={<SavedInvoiceDetails/>}/>
+            <Route path='/:invNum' element={<SavedInvoiceDetails />} />
+            <Route path='/*' element={<NotFound />} />
           </Routes>
         </div>
         {/* <Footer /> */}
