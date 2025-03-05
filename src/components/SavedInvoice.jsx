@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Invoice from "../Data/InvoiceNumber";
 import InvoiceList from "../Data/Invoices";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { NavLink } from "react-router-dom";
 import Logo from "../assets/GBR LOGO white.png";
 
 
@@ -13,7 +14,7 @@ const SavedInvoiceDetails = () => {
 //   console.log(currentInvNumber, currentInvNumber.type, "currentinvnum");
 //   console.log(useParams(), useParams().type, "params");
 //   console.log(invNum, invNum.type, "invNum");
-
+const navigate = useNavigate()
   const [invDetails, setInvDetails] = useState(null);
 const [invItems, setInvItems] = useState([])
     const [invoice, setInvoice] = useState({})
@@ -99,15 +100,23 @@ useEffect(() => {
   
   
     return (
-      <div className='flex flex-col min-h-screen'>
+      <div className='flex flex-col px-3 py-3 min-h-screen'>
+        <NavLink
+          onClick={() => navigate(-1)}
+          className='  flex gap-2 hover:text-text-secondary  items-center'
+        >
+          <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
+          <p >Back to list</p>
+        </NavLink>
         {/* {invDetails ? <p>{invDetails.client}</p> : <p>Loading...</p>} */}
         {invDetails && invItems.length > 0 && (
-          <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit  flex '>
+          <div ref={invoiceRef} className='   my-3  w-fit  flex '>
             <div className='border mx-auto  flex flex-col w-full border-black bg-white text-black px-3 pt-6 pb-3'>
               <div className='flex flex-col justify-between '>
                 <div className='flex justify-between'>
                   <div className='flex flex-col max-w-[35%] '>
-                    {(invDetails.brand === "glambyree" || !invDetails.brand) && (
+                    {(invDetails.brand === "glambyree" ||
+                      !invDetails.brand) && (
                       <img
                         src={Logo}
                         alt='Glam By Ree Logo'
@@ -324,7 +333,7 @@ useEffect(() => {
 
         <button
           onClick={downloadInvoiceAsPDF}
-          className='bg-button hover:bg-button-hover w-fit mx-auto px-4 font-bold rounded-lg py-2 mb-5 '
+          className='btn-primary  mx-auto font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
         >
           Download
         </button>

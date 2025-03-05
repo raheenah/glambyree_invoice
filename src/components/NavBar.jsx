@@ -7,7 +7,7 @@ const NavBar = () => {
 
   return (
     <div className='bg-background fixed w-full py-2 z-50 px-8 mx-auto'>
-      <ul className='flex py-2 gap-2  text-center lg:max-w-[80%] w-full mx-auto  items-center justify-center  shadow-custom-todo rounded-lg px-2'>
+      {/* <ul className='flex py-2 gap-2  text-center lg:max-w-[80%] w-full mx-auto  items-center justify-center  shadow-custom-todo rounded-lg px-2'>
         <li>
           <NavLink
             to='/list'
@@ -32,7 +32,7 @@ const NavBar = () => {
             Create
           </NavLink>
         </li>
-      </ul>
+      </ul> */}
     </div>
   );
 };

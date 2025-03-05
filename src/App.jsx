@@ -11,8 +11,8 @@ function App() {
   return (
     <>
       <Router>
-        <NavBar />
-        <div className="pt-16 text-text bg-background">
+        {/* <NavBar /> */}
+        <div className=" text-text bg-background">
           <Routes>
             <Route path="/" element={<Navigate to= "/add"/>}/>
             <Route path='/list' element={<HomePage />} />

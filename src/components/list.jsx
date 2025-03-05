@@ -18,8 +18,7 @@ const HomePage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [searchStatus, setSearchStatus] = useState("all")
-
+  const [searchStatus, setSearchStatus] = useState("all");
 
   const handlePagination = () => {
     // console.log("invoicelist paginate", invoiceList)
@@ -37,22 +36,27 @@ const HomePage = () => {
         (searchBrand === "glambyree" &&
           (!invoice.brand || invoice.brand === "glambyree"));
 
-      
-       const matchesPaymentStatus =
-         searchStatus === "all" ||
-         (invoice.paid === true && searchStatus === "true") ||
-         (searchStatus === "false" && invoice.paid === false);
+      const matchesPaymentStatus =
+        searchStatus === "all" ||
+        (invoice.paid === true && searchStatus === "true") ||
+        (searchStatus === "false" && invoice.paid === false);
 
       //  console.log({
       //    invoiceBrand: invoice.brand,
       //    searching: searchBrand,
       //    matchesBrand,
       //  });
-       const matchesDateRange =
-         (!startDate || new Date(invoice.invoiceDate) >= new Date(startDate)) &&
-         (!endDate || new Date(invoice.invoiceDate) <= new Date(endDate));
+      const matchesDateRange =
+        (!startDate || new Date(invoice.invoiceDate) >= new Date(startDate)) &&
+        (!endDate || new Date(invoice.invoiceDate) <= new Date(endDate));
 
-      return matchesClient && matchesInvoiceNumber && matchesBrand && matchesDateRange && matchesPaymentStatus;
+      return (
+        matchesClient &&
+        matchesInvoiceNumber &&
+        matchesBrand &&
+        matchesDateRange &&
+        matchesPaymentStatus
+      );
     });
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -93,7 +97,16 @@ const HomePage = () => {
   useEffect(() => {
     handlePagination();
     // console.log("list", paginatedList);
-  }, [currentPage, invoiceList, searchKeyword, invNumber, searchBrand, startDate, endDate, searchStatus]);
+  }, [
+    currentPage,
+    invoiceList,
+    searchKeyword,
+    invNumber,
+    searchBrand,
+    startDate,
+    endDate,
+    searchStatus,
+  ]);
 
   const handleFetchInvoiceList = () => {
     const list = InvoiceList.getInvoiceList("invoiceList");
@@ -135,13 +148,24 @@ const HomePage = () => {
   };
 
   const handleResetFilters = () => {
-    setSearchKeyword("")
-    setInvNumber(null)
-    setSearchBrand("all")
-    setStartDate("")
-    setEndDate("")
-    setFilterOpen(false)
-  }
+    setSearchKeyword("");
+    setInvNumber(null);
+    setSearchBrand("all");
+    setStartDate("");
+    setEndDate("");
+    // setFilterOpen(false);
+  };
+  useEffect(() => {
+    if (filterOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, [filterOpen]);
 
   return (
     <div className='flex flex-col gap-3 px-3 min-h-screen'>
@@ -159,100 +183,115 @@ const HomePage = () => {
         <div className='flex justify-between '>
           <button
             onClick={handleNavigateToCreateInvoice}
-            className='border-2 border-button text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+            className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
           >
             <i className='fa-solid fa-plus'></i>{" "}
           </button>
           <button
             onClick={() => setFilterOpen(!filterOpen)}
-            className='border-2 border-button text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
+            className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
           >
             {!filterOpen && <i className='fa-solid fa-filter'></i>}
             {filterOpen && <i className='fa-solid fa-ban'></i>}
           </button>
         </div>
         {filterOpen && (
-          <div className='right-0 absolute w-[70%]  bg-background p-4 border-button border-x-2 border-b-2 rounded-bl rounded-br justify-between gap-3 '>
-            <div className='flex justify-end'>
-              <button
-                onClick={handleResetFilters}
-                className='bg-button hover:bg-button-hover px-2 py-1 text-sm font-bold rounded'
+          <div
+            onClick={() => {
+              setFilterOpen(false);
+            }}
+            className={`fixed w-full min-h-screen inset-0  z-30  bg-black/20 p-4 border-button  rounded-br justify-between gap-3 `}
+          >
+            <div className='flex z-34 w-full h-full items-center justify-center'>
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className='fixed text-sm w-[80%]  rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)] bg-background  transition-transform duration-300 px-4 py-6'
               >
-                Reset
-              </button>
-            </div>
-            <div className=' flex flex-col gap-3 '>
-              <div className='flex flex-col'>
-                {" "}
-                <label className='font-bold'>Client's name</label>{" "}
-                <input
-                  type='text'
-                  className='border-2 placeholder:text-text  border-button bg-transparent  px-2 py-1 rounded w-full'
-                  placeholder='Search...'
-                  onChange={(e) => setSearchKeyword(e.target.value)}
-                ></input>
-              </div>
-              <div className='flex flex-col'>
-                {" "}
-                <label className='font-bold'>Invoice number</label>
-                <input
-                  className='border-2 w-full placeholder:text-text border-button px-2 bg-transparent py-1 rounded'
-                  type='text'
-                  placeholder='Search...'
-                  onChange={(e) => setInvNumber(e.target.value)}
-                ></input>
-              </div>
-
-              <div className='flex flex-col'>
-                {" "}
-                <label className='font-bold'>Payment status</label>
-                <select
-                  className='border-2 w-full placeholder:text-text border-button px-2 bg-transparent py-1 rounded'
-                  value={searchStatus}
-                  onChange={(e) => setSearchStatus(e.target.value)}
-                >
-                  <option value={"all"}>All</option>
-                  <option value={"true"}>Paid</option>
-                  <option value={"false"}>Unpaid</option>
-                </select>
-              </div>
-              <div className='flex flex-col'>
-                {" "}
-                <label className='font-bold'>Brand</label>
-                <select
-                  className='border-2 w-full placeholder:text-text border-button px-2 bg-transparent py-1 rounded'
-                  value={searchBrand}
-                  onChange={(e) => setSearchBrand(e.target.value)}
-                >
-                  <option value={"all"}>All</option>
-                  <option value={"glambyree"}>Glambyree</option>
-                  <option value={"lumiere"}>Lumiere</option>
-                </select>
-              </div>
-              <div className='flex gap-2 w-full justify-between '>
-                <div className='flex flex-col w-[48%]'>
-                  {" "}
-                  <label className='font-bold'>From</label>
-                  <input
-                    type='date'
-                    value={startDate}
-                    placeholder='Start date'
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className='border-2 border-button px-2 bg-transparent py-1 rounded'
-                  />
+                <div className=' mx-auto flex flex-col gap-3 '>
+                  <div className='flex justify-end'>
+                    <button
+                      onClick={handleResetFilters}
+                      className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+                    >
+                      <i className='fa-solid fa-arrow-rotate-left'></i>
+                    </button>
+                  </div>
+                  <div className=' flex flex-col gap-3 '>
+                    <div className='flex flex-col'>
+                      {" "}
+                      <label className='font-'>Client's name</label>{" "}
+                      <input
+                        type='text'
+                        className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                        // placeholder='Search...'
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                      ></input>
+                    </div>
+                    <div className='flex flex-col'>
+                      {" "}
+                      <label className='font-'>Invoice number</label>
+                      <input
+                        className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                        type='text'
+                        // placeholder='Search...'
+                        onChange={(e) => setInvNumber(e.target.value)}
+                      ></input>
+                    </div>
+                    <div className='flex gap-2 w-full justify-between '>
+                      <div className='flex w-full  flex-col'>
+                        {" "}
+                        <label className='font-'>Payment status</label>
+                        <select
+                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                          value={searchStatus}
+                          onChange={(e) => setSearchStatus(e.target.value)}
+                        >
+                          <option value={"all"}>All</option>
+                          <option value={"true"}>Paid</option>
+                          <option value={"false"}>Unpaid</option>
+                        </select>
+                      </div>
+                      <div className='flex w-full flex-col'>
+                        {" "}
+                        <label className='font-'>Brand</label>
+                        <select
+                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                          value={searchBrand}
+                          onChange={(e) => setSearchBrand(e.target.value)}
+                        >
+                          <option value={"all"}>All</option>
+                          <option value={"glambyree"}>Glambyree</option>
+                          <option value={"lumiere"}>Lumiere</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className='flex gap-2 w-full justify-between '>
+                      <div className='flex flex-col w-[48%]'>
+                        {" "}
+                        <label className='font-'>From</label>
+                        <input
+                          type='date'
+                          value={startDate}
+                          placeholder='Start date'
+                          onChange={(e) => setStartDate(e.target.value)}
+                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                        />
+                      </div>
+                      <div className='flex flex-col w-[48%]'>
+                        {" "}
+                        <label className='font-'>To</label>
+                        <input
+                          type='date'
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className='flex flex-col w-[48%]'>
-                  {" "}
-                  <label className='font-bold'>To</label>
-                  <input
-                    type='date'
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className='border-2 border-button px-2 bg-transparent py-1 rounded'
-                  />
-                </div>
               </div>
-            </div>
+            </div>{" "}
           </div>
         )}
       </div>
@@ -289,7 +328,7 @@ const HomePage = () => {
             </NavLink>
             <button
               onClick={() => handleUpdatePaidStatus(item.invNumber)}
-              className='bg-button hover:bg-button-hover font-bold px-2 py-1 mb-2 rounded'
+              className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
             >
               {item.paid ? "Mark Unpaid" : "Mark Paid"}
             </button>

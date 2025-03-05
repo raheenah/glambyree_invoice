@@ -5,6 +5,7 @@ import jsPDF from "jspdf";
 import Invoice from "../Data/InvoiceNumber";
 import InvoiceList from "../Data/Invoices";
 import Logo from "../assets/GBR LOGO white.png";
+import { NavLink , useNavigate } from "react-router-dom";
 
 
 const InvoicePage = () => {
@@ -16,18 +17,18 @@ const InvoicePage = () => {
   const [date, setDate] = useState("2/03/2024");
   const [expirationDate, setExpirationDate] = useState("4/03/2039");
   const [itemToAdd, setItemToAdd] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState(0);
   const [unitPrice, setUnitPrice] = useState("");
   const [invoiceTotal, setInvoiceTotal] = useState(0);
   const [savedInoiceDetaile, setSavedInvoiceDetails] = useState({});
   const [appType, setAppType] = useState(null);
   const [appTime, setAppTime] = useState(null);
-    const [appDate, setAppDate] = useState(null);
+  const [appDate, setAppDate] = useState(null);
   const [discount, setDiscount] = useState(0);
-  const [inSubTotal, setInvSubTotal] = useState(0)
+  const [inSubTotal, setInvSubTotal] = useState(0);
   const [selectedBusiness, setSelectedBusiness] = useState("glambyree");
-
-
+  const [isAsideVisible, setIsAsideVisible] = useState(false);
+    const navigate = useNavigate();
 
 
   const handleUpdateInvoiceNumber = () => {
@@ -62,6 +63,11 @@ const InvoicePage = () => {
   }, []);
 
   const handleAddNewItem = () => {
+    if (!itemToAdd.trim() || !unitPrice || !quantity) {
+      alert("Please input the item details");
+      return;
+    }
+
     setItemsList((prev) => {
       const updatedList = [
         ...prev,
@@ -84,7 +90,6 @@ const InvoicePage = () => {
 
     // setInvSubTotal(currentTotal);
     // setInvoiceTotal(actualTotal);
-
   };
 
   useEffect(() => {
@@ -92,9 +97,9 @@ const InvoicePage = () => {
       (total, item) => total + item.amount,
       0
     );
-          const actualTotal = currentTotal - discount;
+    const actualTotal = currentTotal - discount;
 
-    setInvSubTotal(currentTotal); 
+    setInvSubTotal(currentTotal);
     setInvoiceTotal(actualTotal);
   }, [itemsList, discount]);
 
@@ -137,8 +142,8 @@ const InvoicePage = () => {
       date: appDate,
       time: appTime,
       subtotal: inSubTotal,
-      brand: selectedBusiness, 
-paid: false
+      brand: selectedBusiness,
+      paid: false,
     };
 
     InvoiceList.addInvoice("invoiceList", detailsToSave);
@@ -156,128 +161,243 @@ paid: false
     return num.toLocaleString();
   };
 
-  return (
-    <div className='flex flex-col gap-4 py-4 bg-background text-text'>
-      <div className='flex flex-col items-start mx-3 gap-3'>
-        <div className='flex flex-col gap-2  w-full justify-self-center'>
-          <h3 className=' font-extrabold text-text underline'>
-            Appointment Details
-          </h3>
-          <div className='grid grid-cols-2 gap-2'>
-            <div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Client's Name</label>
-                <input
-                  type='text'
-                  onChange={(e) => setClientName(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Client's Number</label>
-                <input
-                  type='text'
-                  onChange={(e) => setClientNumber(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Client's Address</label>
-                <textarea
-                  // type='text-box'
-                  onChange={(e) => setClientAddress(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
-            </div>
-            <div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Business</label>
-                <select
-                  value={selectedBusiness}
-                  onChange={(e) => setSelectedBusiness(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                >
-                  <option value='glambyree'>Glambyree</option>
-                  <option value='lumiere'>Lumière</option>
-                </select>
-              </div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Appointment Type</label>
-                <input
-                  type='text'
-                  onChange={(e) => setAppType(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
+  // useEffect(() => {
+  //   if (isAsideVisible) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //   }
 
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Appointment Date</label>
-                <input
-                  type='date'
-                  onChange={(e) => setAppDate(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
-              <div className='flex flex-col'>
-                <label className='font-semibold'>Appointment Time</label>
-                <input
-                  type='time'
-                  onChange={(e) => setAppTime(e.target.value)}
-                  className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='flex flex-col gap-2 w-full justify-self-center'>
-          <div className='flex justify-between'>
-            <h3 className=' font-extrabold text-text underline'>
-              Invoice Item
-            </h3>
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //   };
+  // }, [isAsideVisible]);
+
+  const handleIncreaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+  const handleDecreadeQuantity = () => {
+    if (quantity > 0) {
+      setQuantity(quantity - 1);
+    } else {
+      setQuantity(0);
+    }
+  };
+
+  return (
+    <div
+      className={`flex flex-col py-4 min-h-screen gap-4  bg-background text-text`}
+    >
+      <div className=' flex  flex-col px-3   w-full z-51'>
+        <div className='flex py-4 items-center text-text justtfy-center p-0'>
+          <NavLink
+            onClick={(e) => {
+              e.preventDefault();
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate("/list");
+              }
+            }}
+            className='  flex gap-2 hover:text-text-secondary  items-center'
+          >
+            <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
+            <p className='hidden md:block'>Back to list</p>
+          </NavLink>
+          <div className='flex py-2 gap-2   px-8 shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] rounded-lg bg-button text-center   mx-auto  items-center justify-evenly '>
             <button
-              onClick={handleAddNewItem}
-              className='border-2 border-button  text-button hover:text-button-hover px-1 rounded-lg hover:border-button-hover'
+              // value={selectedBusiness}
+              // value='glambyree'
+              onClick={() => setSelectedBusiness("glambyree")}
+              className={`p-2 rounded-lg font-semibold transition-all duration-300 ${
+                selectedBusiness === "glambyree"
+                  ? "bg-button-hover text-white shadow-lg"
+                  : "text-text-secondary hover:text-white hover:underline"
+              }`}
             >
-              <i className='fa-solid fa-plus'></i>{" "}
+              Glambyree
+            </button>{" "}
+            <div className='text-text-secondary'>|</div>
+            <button
+              // value={selectedBusiness}
+              // value='lumiere'
+              onClick={() => setSelectedBusiness("lumiere")}
+              className={`p-2 rounded-lg font-semibold transition-all duration-300 ${
+                selectedBusiness === "lumiere"
+                  ? "bg-button-hover text-white shadow-lg"
+                  : "text-text-secondary hover:text-white hover:underline"
+              }`}
+            >
+              Lumière
             </button>
           </div>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Item</label>
-            <input
-              type='text'
-              onChange={(e) => setItemToAdd(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
-          </div>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Quantity</label>
-            <input
-              type='text'
-              onChange={(e) => setQuantity(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
-          </div>
-          <div className='flex flex-col'>
-            <label className='font-semibold'>Unit price</label>
-            <input
-              type='text'
-              onChange={(e) => setUnitPrice(e.target.value)}
-              className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-            />
-          </div>
+          <button
+            className='hover:text-text-secondary '
+            onClick={() => {
+              setIsAsideVisible(!isAsideVisible);
+            }}
+          >
+            <i className='fas fa-sliders-h'></i>
+          </button>
         </div>
-        <div className='flex flex-col self-end'>
-          <label className='font-semibold'>Invoice Discount</label>
-          <input
-            type='number'
-            onChange={(e) => setDiscount(e.target.value)}
-            className='bg-input-background rounded focus:outline-none focus:border-b-2 focus:border-b-input-border hover:border-b-2 hover:border-b-input-border px-2 py-1'
-          />
-        </div>
+
+        <aside
+          onClick={(e) => e.stopPropagation()}
+          className={`fixed text-sm font-normal items-center justify-center z-55 overflow-y-auto top-0 right-0 h-full w-[70%] md:w-[50%] lg:w-[35%] shadow-lg bg-background border-l border-border-color transition-transform duration-300 px-4 py-2
+    ${isAsideVisible ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <div className='flex items-center justify-center h-full w-full'>
+            <div className='flex items-start  flex-col gap-4'>
+              {/* Close Button */}
+              {/* <div className='  z-50  w-full  flex justify-start'>
+              <button
+                onClick={() => setIsAsideVisible(!isAsideVisible)}
+                className='text-primary hover:text-primary-dark'
+              >
+                <i className='fa-solid fa-angle-left '></i>
+              </button>
+            </div> */}
+
+              {/* Invoice Header */}
+              <div className='flex  flex-col gap-2 p-4  rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)]'>
+                <h3 className='text-md font-extrabold text-primary '>
+                  Invoice Details
+                </h3>
+                <div className='grid grid-cols-2 gap-4'>
+                  {/* Client Details */}
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>Client's Name</label>
+                      <input
+                        type='text'
+                        onChange={(e) => setClientName(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>Client's Number</label>
+                      <input
+                        type='text'
+                        onChange={(e) => setClientNumber(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>
+                        Client's Address
+                      </label>
+                      <textarea
+                        onChange={(e) => setClientAddress(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>
+                        Invoice Discount
+                      </label>
+                      <input
+                        type='number'
+                        onChange={(e) => setDiscount(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                  </div>
+                  {/* Appointment Details */}
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>
+                        Appointment Type
+                      </label>
+                      <input
+                        type='text'
+                        onChange={(e) => setAppType(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>
+                        Appointment Date
+                      </label>
+                      <input
+                        type='date'
+                        onChange={(e) => setAppDate(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col'>
+                      <label className='font- text-text'>
+                        Appointment Time
+                      </label>
+                      <input
+                        type='time'
+                        onChange={(e) => setAppTime(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Invoice Items */}
+              <div className='flex flex-col gap-2 p-4  rounded-lg shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)]'>
+                <h3 className='text-md font-extrabold text-primary '>
+                  Add Items
+                </h3>
+                <form className='flex flex-col text-sm gap-4 items-center  '>
+                  <div className='flex w-full gap-2'>
+                    <div className='flex flex-col gap-1 w-3/4  bg- items-start'>
+                      <label className='font text-text'>Service</label>
+
+                      <input
+                        type='text'
+                        placeholder='Item'
+                        onChange={(e) => setItemToAdd(e.target.value)}
+                        className='bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                    <div className='flex flex-col gap-1  w-1/4 font-normal   bg- items-start'>
+                      <label className='font- text-text'>Quantity</label>
+
+                      <input
+                        type='number'
+                        placeholder={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        className='input-field  text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                  </div>
+                  <div className=' flex w-full items-end gap-2 '>
+                    <div className='flex-col w-full  items-center '>
+                      <label className='font- text-text'>Price</label>
+                      <input
+                        type='number'
+                        placeholder='0.00'
+                        onChange={(e) => setUnitPrice(e.target.value)}
+                        className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      />
+                    </div>
+                      <button
+                        onClick={handleAddNewItem}
+                        type='button'
+                        className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+                      >
+                        Add
+                      </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
-      <div ref={invoiceRef} className=' px-3 py-6 my-3  w-fit max-w-[100%] '>
+      <div
+        ref={invoiceRef}
+        onClick={() => {
+          setIsAsideVisible(false);
+        }}
+        className=' px-3  my-3  w-fit max-w-[100%] '
+      >
         <div className='border mx-auto  flex flex-col w-full text-black bg-white border-black px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
@@ -291,7 +411,11 @@ paid: false
                 {selectedBusiness === "glambyree" && (
                   <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
                 )}
-                {selectedBusiness === "lumiere" && <h1 id="store" className="text-6xl">Lumière</h1>}
+                {selectedBusiness === "lumiere" && (
+                  <h1 id='store' className='text-6xl'>
+                    Lumière
+                  </h1>
+                )}
 
                 <div>
                   <p>Millenium Estate, Gbagada</p>
@@ -492,7 +616,7 @@ paid: false
 
       <button
         onClick={downloadInvoiceAsPDF}
-        className='bg-button hover:bg-button-hover w-fit mx-auto px-4 font-bold rounded-lg py-2 '
+        className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary mx-auto  w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
       >
         Save and Download
       </button>
