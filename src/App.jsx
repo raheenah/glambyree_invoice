@@ -17,7 +17,7 @@ function App() {
             <Route path='/' element={<Navigate to='/add' />} />
             <Route path='/list' element={<HomePage />} />
             <Route path='/add' element={<InvoicePage />} />
-            <Route path='/:invNum' element={<SavedInvoiceDetails />} />
+            <Route path='/invoice/:invNum' element={<SavedInvoiceDetails />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </div>

@@ -412,7 +412,7 @@ const HomePage = () => {
           >
             {" "}
             <NavLink
-              to={`/${item.invNumber}`}
+              to={`/invoice/${item.invNumber}`}
               className=' flex flex-col z-2 items-center  w-full gap-2'
 
               // className=' text-button hover:text-button-hover px-2 py-1 rounded-lg hover:border-button-hover'
