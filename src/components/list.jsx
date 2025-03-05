@@ -168,7 +168,12 @@ const HomePage = () => {
   }, [filterOpen]);
 
   return (
-    <div className='flex flex-col gap-3 px-3 min-h-screen'>
+    <div
+      onClick={() => {
+        setFilterOpen(false);
+      }}
+      className='flex flex-col gap-3 px-3 min-h-screen'
+    >
       <div className='flex justify-around'>
         <p>
           <b>Total Invoices Paid:</b>
@@ -179,6 +184,7 @@ const HomePage = () => {
         </p>
         {/* <button onClick={updatePaidInvoices()}>count paid inv</button> */}
       </div>
+
       <div className='relative'>
         <div className='flex justify-between '>
           <button
@@ -188,7 +194,9 @@ const HomePage = () => {
             <i className='fa-solid fa-plus'></i>{" "}
           </button>
           <button
-            onClick={() => setFilterOpen(!filterOpen)}
+            onClick={(e) => {
+              setFilterOpen(!filterOpen), e.stopPropagation();
+            }}
             className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
           >
             {!filterOpen && <i className='fa-solid fa-filter'></i>}
@@ -197,104 +205,103 @@ const HomePage = () => {
         </div>
         {filterOpen && (
           <div
-            onClick={() => {
-              setFilterOpen(false);
-            }}
-            className={`fixed w-full min-h-screen inset-0  z-30  bg-black/20 p-4 border-button  rounded-br justify-between gap-3 `}
+            onClick={(e) => e.stopPropagation()}
+            className='right-0 absolute w-[70%]  bg-background p-4 gap-3  text-sm   rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)]  transition-transform duration-300 px-4 py-6'
           >
-            <div className='flex z-34 w-full h-full items-center justify-center'>
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className='fixed text-sm w-[80%]  rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)] bg-background  transition-transform duration-300 px-4 py-6'
-              >
-                <div className=' mx-auto flex flex-col gap-3 '>
-                  <div className='flex justify-end'>
-                    <button
-                      onClick={handleResetFilters}
-                      className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+            {/* <div className='flex z-34 w-full h-full items-center justify-center'> */}
+            {/* <div
+              onClick={(e) => e.stopPropagation()}
+              className='fixed text-sm w-[80%]  rounded-lg font-normal items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.8)] bg-background  transition-transform duration-300 px-4 py-6'
+            > */}
+              {/* <div className=' mx-auto flex flex-col gap-3 '> */}
+              <div className='flex justify-end'>
+                <button
+                  onClick={handleResetFilters}
+                  className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+                >
+                  <i className='fa-solid fa-arrow-rotate-left'></i>
+                </button>
+              </div>
+              <div className=' flex flex-col gap-3 '>
+                <div className='flex flex-col'>
+                  {" "}
+                  <label className='font-'>Client's name</label>{" "}
+                  <input
+                    type='text'
+                    className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                    // placeholder='Search...'
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                  ></input>
+                </div>
+                <div className='flex flex-col'>
+                  {" "}
+                  <label className='font-'>Invoice number</label>
+                  <input
+                    className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                    type='text'
+                    // placeholder='Search...'
+                    onChange={(e) => setInvNumber(e.target.value)}
+                  ></input>
+                </div>
+                <div className='flex gap-2 w-full justify-between '>
+                  <div className='flex w-full  flex-col'>
+                    {" "}
+                    <label className='font-'>Payment status</label>
+                    <select
+                      className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      value={searchStatus}
+                      onChange={(e) => setSearchStatus(e.target.value)}
                     >
-                      <i className='fa-solid fa-arrow-rotate-left'></i>
-                    </button>
+                      <option value={"all"}>All</option>
+                      <option value={"true"}>Paid</option>
+                      <option value={"false"}>Unpaid</option>
+                    </select>
                   </div>
-                  <div className=' flex flex-col gap-3 '>
-                    <div className='flex flex-col'>
-                      {" "}
-                      <label className='font-'>Client's name</label>{" "}
-                      <input
-                        type='text'
-                        className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                        // placeholder='Search...'
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className='flex flex-col'>
-                      {" "}
-                      <label className='font-'>Invoice number</label>
-                      <input
-                        className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                        type='text'
-                        // placeholder='Search...'
-                        onChange={(e) => setInvNumber(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className='flex gap-2 w-full justify-between '>
-                      <div className='flex w-full  flex-col'>
-                        {" "}
-                        <label className='font-'>Payment status</label>
-                        <select
-                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                          value={searchStatus}
-                          onChange={(e) => setSearchStatus(e.target.value)}
-                        >
-                          <option value={"all"}>All</option>
-                          <option value={"true"}>Paid</option>
-                          <option value={"false"}>Unpaid</option>
-                        </select>
-                      </div>
-                      <div className='flex w-full flex-col'>
-                        {" "}
-                        <label className='font-'>Brand</label>
-                        <select
-                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                          value={searchBrand}
-                          onChange={(e) => setSearchBrand(e.target.value)}
-                        >
-                          <option value={"all"}>All</option>
-                          <option value={"glambyree"}>Glambyree</option>
-                          <option value={"lumiere"}>Lumiere</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='flex gap-2 w-full justify-between '>
-                      <div className='flex flex-col w-[48%]'>
-                        {" "}
-                        <label className='font-'>From</label>
-                        <input
-                          type='date'
-                          value={startDate}
-                          placeholder='Start date'
-                          onChange={(e) => setStartDate(e.target.value)}
-                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                        />
-                      </div>
-                      <div className='flex flex-col w-[48%]'>
-                        {" "}
-                        <label className='font-'>To</label>
-                        <input
-                          type='date'
-                          value={endDate}
-                          onChange={(e) => setEndDate(e.target.value)}
-                          className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
-                        />
-                      </div>
-                    </div>
+                  <div className='flex w-full flex-col'>
+                    {" "}
+                    <label className='font-'>Brand</label>
+                    <select
+                      className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                      value={searchBrand}
+                      onChange={(e) => setSearchBrand(e.target.value)}
+                    >
+                      <option value={"all"}>All</option>
+                      <option value={"glambyree"}>Glambyree</option>
+                      <option value={"lumiere"}>Lumiere</option>
+                    </select>
+                  </div>
+                </div>
+                <div className='flex gap-2 w-full justify-between '>
+                  <div className='flex flex-col w-full'>
+                    {" "}
+                    <label className='font-'>From</label>
+                    <input
+                      type='date'
+                      value={startDate}
+                      placeholder='Start date'
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                    />
+                  </div>
+                  <div className='flex flex-col w-full'>
+                    {" "}
+                    <label className='font-'>To</label>
+                    <input
+                      type='date'
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
+                    />
                   </div>
                 </div>
               </div>
-            </div>{" "}
+            {/* </div> */}
+            {/* </div>
+            </div>{" "} */}
           </div>
         )}
       </div>
+      
       <ul className='flex flex-col  gap-2'>
         {paginatedList.map((item, index) => (
           <li
