@@ -95,19 +95,56 @@ useEffect(() => {
 
       const formatNumberWithCommas = (num) => {
         return num.toLocaleString();
-      };
+  };
+  
+   const handleUpdatePaidStatus = (invNumber) => {
+      // Update the paid status of the invoice
+      InvoiceList.updateInvoicePaidStatus("invoiceList", invNumber);
+  
+      // After updating, refetch the invoice list and recalculate totals
+      handleFetchInvDetails();
+    };
 
   
   
     return (
       <div className='flex flex-col px-3 py-3 min-h-screen'>
-        <NavLink
-          onClick={() => navigate(-1)}
-          className='  flex gap-2 hover:text-text-secondary  items-center'
-        >
-          <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
-          <p >Back to list</p>
-        </NavLink>
+        <div>
+          <NavLink
+            onClick={() => navigate(-1)}
+            className='  flex gap-2 hover:text-text-secondary  items-center'
+          >
+            <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
+            <p>Back to list</p>
+          </NavLink>
+          <div className="flex justify-evenly">
+            <p className='flex  gap-2 items-center'>
+              {" "}
+              Payment Status:{" "}
+              <span
+                className={`font-regular font-extrabold text-3xl        
+                      ${
+                        invDetails?.paid
+                          ? "text-button-paid "
+                          : "text-button-sent  "
+                      } 
+                      `}
+              >
+                {invDetails?.paid ? "Paid" : "Sent"}
+              </span>
+            </p>
+            <button
+              onClick={(e) => {
+                handleUpdatePaidStatus(invDetails.invNumber);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              className='btn-primary   font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit p-2 border-b-2 border-b-button  rounded-lg '
+            >
+              Update status
+            </button>
+          </div>
+        </div>
         {/* {invDetails ? <p>{invDetails.client}</p> : <p>Loading...</p>} */}
         {invDetails && invItems.length > 0 && (
           <div ref={invoiceRef} className='   my-3  w-fit  flex '>
@@ -142,6 +179,14 @@ useEffect(() => {
                       Invoice # {invDetails.invNumber}
                     </h2>
                     <p>Date : {invDetails.invoiceDate}</p>
+                    {invDetails?.paid && (
+                      <p
+                        className={`font-regular text-center bg-button-paid text-text-paid z-10 font-extrabold py-2 mt-4 text-3xl shadow-customDark   w-full    rounded-lg
+                    `}
+                      >
+                        Paid{" "}
+                      </p>
+                    )}
                     {/* <p>Valid till : {expirationDate}</p> */}
                   </div>
                 </div>

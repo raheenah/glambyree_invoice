@@ -204,7 +204,7 @@ const InvoicePage = () => {
             <i className='fa-solid text-inherit fa-angle-left'></i>{" "}
             <p className='hidden md:block'>Back to list</p>
           </NavLink>
-          <div className='flex py-2 gap-2   px-8 shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] rounded-lg bg-button text-center   mx-auto  items-center justify-evenly '>
+          <div className='flex py-2 gap-2 font-dancing  px-8 shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] rounded-lg bg-button text-center   mx-auto  items-center justify-evenly '>
             <button
               // value={selectedBusiness}
               // value='glambyree'
@@ -376,13 +376,13 @@ const InvoicePage = () => {
                         className='input-field   text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none  bg-input-background w-full rounded focus:outline-none shadow-[0px_2px_6px_rgba(0,0,0,0.1),0px_-2px_6px_rgba(0,0,0,0.05)] border-b-2 border-b-input-border  hover:border-b-0 px-2 py-1'
                       />
                     </div>
-                      <button
-                        onClick={handleAddNewItem}
-                        type='button'
-                        className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
-                      >
-                        Add
-                      </button>
+                    <button
+                      onClick={handleAddNewItem}
+                      type='button'
+                      className='btn-primary  font-bold  shadow-[0_5px_10px_rgba(0,0,0,0.15),0_-5px_10px_rgba(255,255,255,0.2)] hover:bg-background-secondary   w-fit px-2 border-b-2 border-b-button  rounded-lg py-1'
+                    >
+                      Add
+                    </button>
                   </div>
                 </form>
               </div>
@@ -401,7 +401,7 @@ const InvoicePage = () => {
         <div className='border mx-auto  flex flex-col w-full text-black bg-white border-black px-3 pt-6 pb-3'>
           <div className='flex flex-col justify-between '>
             <div className='flex justify-between'>
-              <div className='flex flex-col max-w-[35%]'>
+              <div className='flex flex-col  max-w-[35%]'>
                 {/* <h1
                   id='store'
                   className='font-extrabold mb-6 text-black text-5xl'
@@ -412,7 +412,7 @@ const InvoicePage = () => {
                   <img src={Logo} alt='Glam By Ree Logo' className='w-fit' />
                 )}
                 {selectedBusiness === "lumiere" && (
-                  <h1 id='store' className='text-6xl'>
+                  <h1 id='store' className='text-6xl font-dancing'>
                     Lumière
                   </h1>
                 )}
